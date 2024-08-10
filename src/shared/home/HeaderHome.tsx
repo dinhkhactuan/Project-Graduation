@@ -43,6 +43,7 @@ const HeaderHome = () => {
     <Layout>
       <Header
         style={{
+          padding: "0",
           background: "#fff",
           position: "sticky",
           top: 0,
