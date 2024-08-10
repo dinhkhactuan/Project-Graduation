@@ -29,10 +29,6 @@ export const DescriptionTimeViewCount = ({
       <DescriptionDateTime
         data={data?.displayTime ?? data?.publishTime ?? data?.createTime}
       />
-      <div>
-        <FontAwesomeIcon icon={faEye} />
-        <span className="ml-1 text-[14px]">{data?.viewCount || 0}</span>
-      </div>
     </div>
   );
 };

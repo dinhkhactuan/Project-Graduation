@@ -1,4 +1,4 @@
-interface Item {
+export interface Item {
   title: string;
   content: string;
   contentSnippet: string;
@@ -22,7 +22,7 @@ export interface INews {
   };
   generator: string;
   description: string;
-  items: Item;
+  items: Item[];
   link: string;
   pubDate: string;
 }

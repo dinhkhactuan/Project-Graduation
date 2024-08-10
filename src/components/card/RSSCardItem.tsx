@@ -1,24 +1,33 @@
 import React from "react";
 import CustomImage from "../custom/CustomImage";
 import { DescriptionTimeViewCount } from "@/shared/utils/ultils";
-import { INews } from "@/model/news.model";
+import { INews, Item } from "@/model/news.model";
+import { FormCardItem } from "@/shared/home/News/ViewLayout/form";
 
 type CardItemProps = {
-  data?: INews;
+  data: Item;
   className?: string;
   page?: string;
+  vertical?: boolean;
+  formCard?: FormCardItem;
 };
 
 export default function CardItem(props: CardItemProps) {
-  const { data, className = "p-0", page } = props;
+  const { data, className = "p-0", page, vertical, formCard } = props;
 
   return (
     <div
-      className={`card-item flex flex-col md:flex-row  items-start justify-center gap-4 cursor-pointer ${className}`}
+      style={{ borderBottom: "1px solid #eee" }}
+      className={`card-item flex ${
+        vertical ? "flex-col " : "flex-row md:flex-row mb-[12px]"
+      } ${formCard === FormCardItem.COL_REVERSE && "flex-col-reverse"} 
+      ${
+        formCard === FormCardItem.ROW_REVERSE && "flex-row-reverse"
+      }items-start justify-center gap-3 cursor-pointer ${className}`}
     >
       <div
-        className={`w-full  h-max shrink-0 ${
-          page ? "md:w-[120px] xl:w-[100px]" : "md:w-[190px] xl:w-[190px]"
+        className={`w-full  h-full shrink-0 ${
+          !vertical ? "md:w-[120px] xl:w-[100px]" : "w-full  h-full"
         }`}
         style={{
           overflow: "hidden",
@@ -32,27 +41,27 @@ export default function CardItem(props: CardItemProps) {
             transition: "all 0.3s ease-in-out",
           }}
         >
-          <CustomImage src={data?.image.link || ""} rate={"4:3"} />
+          <CustomImage
+            src={data?.enclosure?.url || ""}
+            rate={vertical ? "16:9" : "4:3"}
+          />
         </div>
       </div>
       <div className="w-full">
-        <div className=" text-[16px] card-title text-ellipsis overflow-hidden md:line-clamp-2 font-quicksand-bold text-hover">
+        <div className=" text-[16px] card-title text-ellipsis overflow-hidden md:line-clamp2 font-quicksand-bold text-hover">
           {data?.title || ""}
         </div>
-        <div
-          className={
-            "text-[14px] font-semibold my-1 mt-2 flex items-center justify-between font-quicksand-semibold"
-          }
-        >
-          <DescriptionTimeViewCount data={data?.pubDate} />
-        </div>
-        <span
-          className={`text-[14px] text-ellipsis overflow-hidden md:line-clamp-3 mt-2 font-quicksand-medium ${
-            !!page ? "d-none" : ""
-          }`}
-        >
-          {data?.description || ""}
-        </span>
+        {formCard === FormCardItem.NO_DATE ? (
+          <></>
+        ) : (
+          <div
+            className={
+              "text-[14px] font-semibold my-1 mt-2 flex items-center justify-between font-quicksand-semibold"
+            }
+          >
+            <DescriptionTimeViewCount data={data?.isoDate} />
+          </div>
+        )}
       </div>
     </div>
   );
