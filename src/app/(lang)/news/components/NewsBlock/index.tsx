@@ -10,6 +10,7 @@ import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { ArticleData } from "../../[id]/page";
 import { LatestNews } from "@/service/news.api";
 import { Item } from "@/model/news.model";
+import { getTheme } from "@/shared/utils/theme/theme";
 
 type MostReadNewsProps = {
   view?: number;
@@ -29,10 +30,19 @@ export default function MostReadNews(props: MostReadNewsProps) {
     };
     getData();
   }, []);
+  const themeData = getTheme();
   return (
-    <div className="p-[16px]">
+    <div
+      className="p-[16px]"
+      style={{ backgroundColor: themeData.colorInfoBg }}
+    >
       <div>
-        <p className="pb-[10px] font-bold">{heading}</p>
+        <p
+          className="pb-[10px] font-bold"
+          style={{ color: themeData.colorPrimary }}
+        >
+          {heading}
+        </p>
       </div>
       <div className="flex flex-col items-start gap-3">
         {dataList?.length > 0 ? (
@@ -60,7 +70,15 @@ export default function MostReadNews(props: MostReadNewsProps) {
                 </div>
               </div>
               <div className="grow w-full">
-                <p className="text-black text-[14px] cursor-pointer font-semibold overflow-hidden md:line-clamp-3 text-hover">
+                <p
+                  className="text-[14px] cursor-pointer font-semibold overflow-hidden md:line-clamp-3 text-hover"
+                  style={
+                    {
+                      "--color": themeData.colorTextPrimary,
+                      "--hover-color": themeData.colorPrimary,
+                    } as React.CSSProperties
+                  }
+                >
                   {ele?.title}
                 </p>
                 <div

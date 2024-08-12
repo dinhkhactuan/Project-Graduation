@@ -120,36 +120,36 @@ const ViewLayoutDefault = () => {
         </div>
       </div>
       {/* sesson6 */}
-      <div className="flex gap-2 mt-2 p-2">
-        <div className="w-1/3	">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2 p-2">
+        <div className="mb-4 sm:mb-0">
           <LeftNews
             url="oto-xe-may.rss"
             size={4}
-            classname="pr-[10px] md:border-r md:border-gray-200"
+            classname="pr-[10px] h-full border-b sm:border-b-0 sm:border-r border-gray-200 pb-4 sm:pb-0"
             form={FormCardItem.NO_DATE}
           />
         </div>
-        <div className="w-1/3 ">
+        <div className="mb-4 sm:mb-0">
           <LeftNews
             url="y-kien.rss"
             size={4}
-            classname="pr-[10px] md:border-r md:border-gray-200"
+            classname="pr-[10px] h-full border-b sm:border-b-0 lg:border-r border-gray-200 pb-4 sm:pb-0"
             form={FormCardItem.NO_DATE}
           />
         </div>
-        <div className="w-1/3	">
+        <div className="mb-4 sm:mb-0">
           <LeftNews
             url="cuoi.rss"
             size={4}
-            classname="pr-[10px] md:border-r md:border-gray-200"
+            classname="pr-[10px] h-full border-b sm:border-b-0 sm:border-r lg:border-r-0 border-gray-200 pb-4 sm:pb-0"
             form={FormCardItem.NO_DATE}
           />
         </div>
-        <div className="w-1/3	">
+        <div>
           <LeftNews
             url="tam-su.rss"
             size={4}
-            classname="pr-[10px] md:border-r md:border-gray-200"
+            classname="pr-[10px] h-full"
             form={FormCardItem.NO_DATE}
           />
         </div>

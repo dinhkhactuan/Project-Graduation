@@ -11,13 +11,18 @@ import contrastSmall from "@/assets/img/contrast-small.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faFacebook, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import Link from "next/link";
 import { INews } from "@/model/news.model";
-import { DescriptionTimeViewCount } from "@/shared/utils/ultils";
+import ZaloShareButton, {
+  DescriptionTimeViewCount,
+  processContent,
+} from "@/shared/utils/ultils";
 import { ArticleData } from "../../[id]/page";
 import DOMPurify from "dompurify";
 import MostReadNews from "../NewsBlock";
+import { FacebookShareButton, TwitterShareButton } from "next-share";
+import { getTheme } from "@/shared/utils/theme/theme";
 
 const FONT_SIZE = 0;
 const LINE_HEIGHT = 0;
@@ -33,7 +38,6 @@ export default function NewDetails(props: NewDetailsProps) {
   const { newData, title } = props;
 
   const [currentUrl, setCurrentUrl] = useState("");
-
   const [fontSize, setFontSize] = useState(FONT_SIZE);
   const [lineHeight, setLineHeight] = useState(LINE_HEIGHT);
   const [background, setBackground] = useState(BACKGROUND);
@@ -45,6 +49,7 @@ export default function NewDetails(props: NewDetailsProps) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
   }, []);
+  const themeData = getTheme();
 
   return (
     <>
@@ -53,7 +58,7 @@ export default function NewDetails(props: NewDetailsProps) {
           <div className={"web-container page-details mt-[30px]"}>
             <div className="mb-[38px]"></div>
             <div style={{ position: "relative" }}>
-              <div className={"flex flex-row mb-4"}>
+              <div className={"flex flex-row mb-4 gap-4"}>
                 <div
                   className="flex flex-col sm:w-full lg:w-2/3"
                   style={{
@@ -65,6 +70,7 @@ export default function NewDetails(props: NewDetailsProps) {
                       className="title-details font-quicksand-bold text-[20px] lg:text-[28px]"
                       style={{
                         lineHeight: 1.5 + lineHeight,
+                        color: themeData.colorPrimary,
                       }}
                     >
                       {newData?.title || ""}
@@ -205,43 +211,54 @@ export default function NewDetails(props: NewDetailsProps) {
                       lineHeight: 1.5 + lineHeight,
                     }}
                     dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(newData?.content || ""),
+                      __html: DOMPurify.sanitize(
+                        processContent(newData.content),
+                        {
+                          ADD_TAGS: ["img"],
+                          ADD_ATTR: ["src", "alt"],
+                        }
+                      ),
                     }}
                   ></div>
-                  <div className="text-[16px] mt-2">
-                    Tác giả:
-                    <span className="font-semibold capitalize">
-                      {newData?.author || ""}
-                    </span>
-                  </div>
+                  <div className="flex items-center	justify-between">
+                    <div className="text-[16px] mt-2">
+                      Tác giả:
+                      <span className="font-semibold capitalize">
+                        {newData?.author || " Chưa cập nhật"}
+                      </span>
+                    </div>
 
-                  <div className="flex justify-between items-center">
-                    <div className="flex font-bold gap-2 mr-[4px] mt-3">
-                      Chia sẻ:
-                      {/* <FacebookShareButton
-                        url={currentUrl}
-                        title={newData?.title}
-                        blankTarget={true}
-                      >
-                        <FaFacebook className="text-[20px] leading-[30px] sm:text-2xl !text-[#3b5998] cursor-pointer" />
-                      </FacebookShareButton>
-                      <ZaloShareButton />
-                      <TwitterShareButton
-                        url={currentUrl}
-                        title={newData?.title}
-                        blankTarget={true}
-                      >
-                        <div className="flex items-center">
+                    <div className="flex justify-between items-center">
+                      <div className="flex font-bold gap-2 mr-[4px] mt-3">
+                        Chia sẻ:
+                        <FacebookShareButton
+                          url={currentUrl}
+                          title={newData?.title}
+                          blankTarget={true}
+                        >
                           <FontAwesomeIcon
-                            icon={faTwitter}
-                            style={{
-                              cursor: "pointer",
-                              fontSize: "24px",
-                              color: "#50abf1",
-                            }}
+                            icon={faFacebook}
+                            className="text-[20px] leading-[30px] sm:text-2xl !text-[#3b5998] cursor-pointer"
                           />
-                        </div>
-                      </TwitterShareButton> */}
+                        </FacebookShareButton>
+                        <ZaloShareButton />
+                        <TwitterShareButton
+                          url={currentUrl}
+                          title={newData?.title}
+                          blankTarget={true}
+                        >
+                          <div className="flex items-center">
+                            <FontAwesomeIcon
+                              icon={faTwitter}
+                              style={{
+                                cursor: "pointer",
+                                fontSize: "24px",
+                                color: "#50abf1",
+                              }}
+                            />
+                          </div>
+                        </TwitterShareButton>
+                      </div>
                     </div>
                   </div>
                 </div>

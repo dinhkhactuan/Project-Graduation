@@ -3,6 +3,7 @@ import CustomImage from "../custom/CustomImage";
 import { DescriptionTimeViewCount } from "@/shared/utils/ultils";
 import { INews, Item } from "@/model/news.model";
 import { FormCardItem } from "@/shared/home/News/ViewLayout/form";
+import { getTheme } from "@/shared/utils/theme/theme";
 
 type CardItemProps = {
   data: Item;
@@ -14,12 +15,15 @@ type CardItemProps = {
 
 export default function CardItem(props: CardItemProps) {
   const { data, className = "p-0", page, vertical, formCard } = props;
+  const themeData = getTheme();
 
   return (
     <div
       style={{ borderBottom: "1px solid #eee" }}
       className={`card-item flex ${
-        vertical ? "flex-col " : "flex-row md:flex-row mb-[12px]"
+        vertical
+          ? "flex-col "
+          : "flex-col sm:flex-col md:flex-row lg:flex-row mb-[12px]"
       } ${formCard === FormCardItem.COL_REVERSE && "flex-col-reverse"} 
       ${
         formCard === FormCardItem.ROW_REVERSE && "flex-row-reverse"
@@ -48,7 +52,15 @@ export default function CardItem(props: CardItemProps) {
         </div>
       </div>
       <div className="w-full">
-        <div className=" text-[16px] card-title text-ellipsis overflow-hidden md:line-clamp2 font-quicksand-bold text-hover">
+        <div
+          className="text-[16px] font-bold overflow-hidden md:line-clamp-2 text-hover"
+          style={
+            {
+              "--hover-color": themeData.colorPrimary,
+              "--color": themeData.colorTextPrimary,
+            } as React.CSSProperties
+          }
+        >
           {data?.title || ""}
         </div>
         {formCard === FormCardItem.NO_DATE ? (

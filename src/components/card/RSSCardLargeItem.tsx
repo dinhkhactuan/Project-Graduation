@@ -4,6 +4,7 @@ import CustomImage from "../custom/CustomImage";
 import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
+import { getTheme } from "@/shared/utils/theme/theme";
 
 type CardLargeItem = {
   data?: Item;
@@ -12,6 +13,8 @@ type CardLargeItem = {
 
 export default function CardLargeItem(props: CardLargeItem) {
   const { data } = props;
+  const themeData = getTheme();
+
   return (
     <>
       {data && (
@@ -36,7 +39,15 @@ export default function CardLargeItem(props: CardLargeItem) {
             </div>
           </div>
           <div className="py-[12px]">
-            <p className="card-title text-ellipsis overflow-hidden md:line-clamp-2 hover:opacity-80 text-[22px] font-quicksand-bold text-hover">
+            <p
+              className="card-title text-ellipsis overflow-hidden md:line-clamp-2 hover:opacity-80 text-[22px] font-quicksand-bold text-hover"
+              style={
+                {
+                  "--hover-color": themeData.colorPrimary,
+                  "--color": themeData.colorTextPrimary,
+                } as React.CSSProperties
+              }
+            >
               {data?.title || ""}
             </p>
             <div
