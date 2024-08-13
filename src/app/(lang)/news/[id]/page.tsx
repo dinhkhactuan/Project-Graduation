@@ -39,7 +39,6 @@ const NewsDetailPage = () => {
             doc
               .querySelector("meta[property='og:image']")
               ?.getAttribute("content") || "";
-          console.log(image);
 
           setArticle({
             title,

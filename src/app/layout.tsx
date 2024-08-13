@@ -4,6 +4,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "@/assets/scss/index.scss";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import ThemeProvider from "./ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 config.autoAddCss = false;
 
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <ThemeProvider>{children}</ThemeProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

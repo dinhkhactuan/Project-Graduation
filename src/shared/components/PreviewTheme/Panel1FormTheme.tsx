@@ -1,14 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Select, Radio, Space, RadioChangeEvent } from "antd";
+import {
+  Theme_Option,
+  setTheme,
+  Theme_arrary,
+} from "@/shared/utils/theme/theme";
+import {
+  THEME_DATA_DEFAULT,
+  THEME_DATA_THREE,
+  THEME_DATA_TWO,
+} from "@/shared/utils/theme/themeOption";
+import { Theme } from "@/shared/utils/theme/type";
 
-const { Option } = Select;
-
+const Themes: { [key in Theme_Option]: Theme } = {
+  [Theme_Option.THEME1]: THEME_DATA_DEFAULT,
+  [Theme_Option.THEME2]: THEME_DATA_TWO,
+  [Theme_Option.THEME3]: THEME_DATA_THREE,
+  [Theme_Option.THEME4]: THEME_DATA_THREE,
+};
 const Panel1FormTheme = () => {
-  const [selectedLayout, setSelectedLayout] = useState("layout1");
+  const [selectedLayout, setSelectedLayout] = useState(Theme_Option.THEME1);
 
   const handleLayoutChange = (e: RadioChangeEvent) => {
     setSelectedLayout(e.target.value);
   };
+
+  useEffect(() => {
+    setTheme(Themes[selectedLayout]);
+  }, [selectedLayout]);
 
   const getRadioStyle = (value: string) => {
     const baseStyle = {
@@ -41,8 +60,13 @@ const Panel1FormTheme = () => {
           onChange={handleLayoutChange}
         >
           <Space direction="vertical" style={{ width: "100%" }}>
-            {["Chủ đề 1", "Chủ đề 2", "Chủ đề 3", "Chủ đề 4"].map((layout) => (
-              <Radio key={layout} value={layout} style={getRadioStyle(layout)}>
+            {Theme_arrary.map((layout) => (
+              <Radio
+                key={layout}
+                value={layout}
+                checked={selectedLayout === Theme_Option.THEME1}
+                style={getRadioStyle(layout)}
+              >
                 {`Chủ đề ${layout.slice(-1)}`}
               </Radio>
             ))}

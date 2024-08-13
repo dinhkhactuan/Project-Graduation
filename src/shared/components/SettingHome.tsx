@@ -22,19 +22,18 @@ const SettingHome = (prop: ISettingHome) => {
     },
   ];
   const onChange = (key: string) => {
-    console.log(key);
   };
   return (
     <>
       <Modal
         width={"100%"}
-        height={"100%"}
+        height={"90%"}
         title="Basic Modal"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        style={{ top: 0, paddingBottom: 0 }}
-        bodyStyle={{ height: "calc(100vh - 120px)", overflowY: "hidden" }}
+        style={{ top: 14, paddingBottom: 0 }}
+        bodyStyle={{ height: "calc(100vh - 150px)", overflowY: "hidden" }}
       >
         <Tabs
           style={{ height: "100%" }}
