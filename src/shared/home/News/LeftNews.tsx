@@ -35,6 +35,7 @@ const LeftNews = (prop: ILeftNews) => {
         (item: Item, index: number) => {
           return (
             <div
+              key={index}
               onClick={() => handleItemClick(item)}
               style={{
                 padding: "0 10px",
@@ -45,7 +46,7 @@ const LeftNews = (prop: ILeftNews) => {
                 key={index}
                 data={item}
                 formCard={form}
-                page="1"
+                page={true}
                 vertical={vertical}
               />
             </div>

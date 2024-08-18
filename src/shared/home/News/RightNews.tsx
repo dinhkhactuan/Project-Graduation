@@ -29,7 +29,7 @@ const RightNews = (prop: IRightNews) => {
     >
       {(size ? datas?.items?.slice(0, size) : datas?.items)?.map(
         (item: Item, index: number) => {
-          return <CardItem key={index} data={item} page="1" />;
+          return <CardItem key={index} data={item} page={true} />;
         }
       )}
     </div>

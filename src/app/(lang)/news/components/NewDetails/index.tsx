@@ -267,14 +267,12 @@ export default function NewDetails(props: NewDetailsProps) {
                     <MostReadNews
                       heading="Tin mới nhất"
                       url="tin-moi-nhat.rss"
-                      view={1}
                     />
                   </div>
                   <div>
                     <MostReadNews
                       url="tin-xem-nhieu.rss"
                       heading="Tin xem nhiều nhất"
-                      view={1}
                     />
                   </div>
                   {/* {type === TypePage.EVENT ? (
