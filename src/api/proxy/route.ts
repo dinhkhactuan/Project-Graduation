@@ -11,12 +11,20 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
+    });
     const data = await response.text();
+
     return new NextResponse(data, {
       headers: {
         "Content-Type": "application/rss+xml",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
       },
     });
   } catch (error) {

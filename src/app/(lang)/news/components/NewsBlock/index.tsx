@@ -10,33 +10,41 @@ import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { ArticleData } from "../../[id]/page";
 import { LatestNews } from "@/service/news.api";
 import { Item } from "@/model/news.model";
+import { getTheme } from "@/shared/utils/theme/theme";
 
 type MostReadNewsProps = {
-  view?: number;
   url: string;
   heading: string;
 };
 
 export default function MostReadNews(props: MostReadNewsProps) {
-  const { view, url, heading } = props;
+  const { url, heading } = props;
   const [dataList, setDataList] = useState<any>([]);
   useEffect(() => {
     const getData = async () => {
       const data = await LatestNews(url);
-      console.log(data);
 
       setDataList(data?.items);
     };
     getData();
   }, []);
+  const themeData = getTheme();
   return (
-    <div className="p-[16px]">
+    <div
+      className="p-[16px]"
+      style={{ backgroundColor: themeData.colorInfoBg }}
+    >
       <div>
-        <p className="pb-[10px] font-bold">{heading}</p>
+        <p
+          className="pb-[10px] font-bold"
+          style={{ color: themeData.colorPrimary }}
+        >
+          {heading}
+        </p>
       </div>
       <div className="flex flex-col items-start gap-3">
         {dataList?.length > 0 ? (
-          dataList.slice(0, 5)?.map((ele: Item, index: number) => (
+          dataList?.slice(0, 5)?.map((ele: Item, index: number) => (
             <div key={index} className="flex gap-2 grow w-full">
               <div
                 className="w-[100px] shrink-0"
@@ -60,7 +68,15 @@ export default function MostReadNews(props: MostReadNewsProps) {
                 </div>
               </div>
               <div className="grow w-full">
-                <p className="text-black text-[14px] cursor-pointer font-semibold overflow-hidden md:line-clamp-3 text-hover">
+                <p
+                  className="text-[14px] cursor-pointer font-semibold overflow-hidden md:line-clamp-3 text-hover"
+                  style={
+                    {
+                      "--color": themeData.colorTextPrimary,
+                      "--hover-color": themeData.colorPrimary,
+                    } as React.CSSProperties
+                  }
+                >
                   {ele?.title}
                 </p>
                 <div
