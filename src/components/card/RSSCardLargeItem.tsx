@@ -1,17 +1,21 @@
-import { INews } from "@/model/news.model";
+import { INews, Item } from "@/model/news.model";
 import React from "react";
 import CustomImage from "../custom/CustomImage";
 import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
+import { getTheme } from "@/shared/utils/theme/theme";
 
 type CardLargeItem = {
-  data?: INews;
+  data?: Item;
   className?: string;
+  page?: boolean;
 };
 
 export default function CardLargeItem(props: CardLargeItem) {
-  const { data } = props;
+  const { data, page = false } = props;
+  const themeData = getTheme();
+
   return (
     <>
       {data && (
@@ -32,11 +36,19 @@ export default function CardLargeItem(props: CardLargeItem) {
                 transition: "all 0.3s ease-in-out",
               }}
             >
-              <CustomImage src={data?.image.url || ""} rate={"16:9"} />
+              <CustomImage src={data?.enclosure?.url || ""} rate={"16:9"} />
             </div>
           </div>
-          <div className="p-[16px]">
-            <p className="card-title text-ellipsis overflow-hidden md:line-clamp-2 hover:opacity-80 text-[22px] font-quicksand-bold text-hover">
+          <div className={`py-[12px] ${page && "px-[14px]"}`}>
+            <p
+              className="card-title text-ellipsis overflow-hidden md:line-clamp-2 hover:opacity-80 text-[22px] font-quicksand-bold text-hover"
+              style={
+                {
+                  "--hover-color": themeData.colorPrimary,
+                  "--color": themeData.colorTextPrimary,
+                } as React.CSSProperties
+              }
+            >
               {data?.title || ""}
             </p>
             <div
@@ -44,7 +56,7 @@ export default function CardLargeItem(props: CardLargeItem) {
                 "text-[14px] my-2 mt-2 flex items-center justify-between font-quicksand-semibold"
               }
             >
-              <DescriptionDateTime data={data?.pubDate ?? data?.pubDate} />
+              <DescriptionDateTime data={data?.isoDate ?? data?.pubDate} />
               <div className="flex items-center ">
                 <FontAwesomeIcon icon={faEye} className={"text-[12px]"} />
                 <span className="ml-1">{0}</span>
@@ -55,7 +67,7 @@ export default function CardLargeItem(props: CardLargeItem) {
                 "card-desc text-ellipsis overflow-hidden md:line-clamp-3 mt-2 font-quicksand-medium"
               }
             >
-              {data?.description || ""}
+              {data?.contentSnippet || ""}
             </span>
           </div>
         </div>

@@ -5,9 +5,10 @@ import { Layout, Menu, MenuProps, Modal, theme } from "antd";
 import Image from "next/image";
 import Search, { SearchProps } from "antd/es/input/Search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faCloud, faGear } from "@fortawesome/free-solid-svg-icons";
 import SettingHome from "../components/SettingHome";
-import { itemsmenu } from "./itemsMenu.model";
+import { useMenuItems } from "./itemsMenu.model";
+import Link from "next/link";
 
 const { Header } = Layout;
 
@@ -17,11 +18,11 @@ const items = new Array(3).fill(null).map((_, index) => ({
 }));
 
 const HeaderHome = () => {
+  const menuItems = useMenuItems();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState("mail");
 
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
     setCurrent(e.key);
   };
   const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
@@ -43,6 +44,7 @@ const HeaderHome = () => {
     <Layout>
       <Header
         style={{
+          padding: "0",
           background: "#fff",
           position: "sticky",
           top: 0,
@@ -52,13 +54,29 @@ const HeaderHome = () => {
         }}
       >
         <div className="flex items-center justify-between h-full px-[10px]">
-          <div>
-            <Image
-              width={150}
-              height={150}
-              src="https://cdnweb.dantri.com.vn/dist/static-logo.1-0-1.742f36bc45f3443d0e59.svg"
-              alt=""
-            />
+          <div className="flex items-center gap-4">
+            <div>
+              <Link href={"/"}>
+                <Image
+                  width={150}
+                  height={150}
+                  src="https://cdnweb.dantri.com.vn/dist/static-logo.1-0-1.742f36bc45f3443d0e59.svg"
+                  alt=""
+                />
+              </Link>
+            </div>
+            <div className="flex items-center gap-3">
+              <div>
+                <span className="block leading-4 font-medium text-right	">
+                  TP. Hồ Chí Minh
+                </span>
+                <span className="block leading-4">Thứ 2, 12/08/2024</span>
+              </div>
+              <div className="flex items-center">
+                <FontAwesomeIcon size="2x" icon={faCloud} />
+                <span className="ml-2">32°C</span>
+              </div>
+            </div>
           </div>
           <Search
             className="!w-2/5"
@@ -77,11 +95,12 @@ const HeaderHome = () => {
           </div>
         </div>
         <Menu
-          className="flex item-center w-full justify-between px-0"
+          style={{ lineHeight: "36px" }}
+          className="flex item-center w-full justify-between px-0 !mb-2"
           onClick={onClick}
           selectedKeys={[current]}
           mode="horizontal"
-          items={itemsmenu}
+          items={menuItems}
         />
       </Header>
     </Layout>

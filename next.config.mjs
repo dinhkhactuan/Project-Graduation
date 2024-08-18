@@ -1,4 +1,19 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  reactStrictMode: false,
+  images: {
+    domains: [
+      "vnexpress.net",
+      "i1-vnexpress.vnecdn.net",
+      "i1-thethao.vnecdn.net",
+      "i1-suckhoe.vnecdn.net",
+      "i1-giaitri.vnecdn.net",
+      "i1-dulich.vnecdn.net",
+      "i1-giadinh.vnecdn.net",
+      "i1-sohoa.vnecdn.net",
+      "i1-kinhdoanh.vnecdn.net",
+    ],
+  },
+};
 
 export default nextConfig;

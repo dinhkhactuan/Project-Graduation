@@ -1,10 +1,48 @@
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
+import React, { ReactNode } from "react";
+import icon_zalo from "@/assets/img/icon_zalo.png";
+import Image from "next/image";
+import { getTheme } from "./theme/theme";
+
+export const HeadingPage = ({
+  icon,
+  title,
+  path,
+}: {
+  icon?: ReactNode;
+  title: string;
+  path?: string;
+  breadcrumb?: BreadcrumbItemType[];
+}) => {
+  const themeData = getTheme();
+  return (
+    <>
+      {/*<div className={'mb-4'}>{breadcrumb && <Breadcrumb breadcrumb={breadcrumb} />}</div>*/}
+      <div className="flex items-center gap-3 mb-[10px]">
+        {icon}
+        <div
+          // link={path}
+          className="uppercase text-[20px] md:text-[20px] lg:text-[24px] font-medium cursor-pointer"
+          style={{ color: themeData.colorPrimary }}
+        >
+          {title}
+        </div>
+      </div>
+    </>
+  );
+};
 
 export const DescriptionDateTime = ({ data }: { data: any }) => {
+  const themeData = getTheme();
   return (
-    <div className="flex items-center gap-1">
+    <div
+      className="flex items-center gap-1"
+      style={{
+        color: `${themeData.colorTextSecondary}`,
+      }}
+    >
       <FontAwesomeIcon icon={faEye} />
       <span className="text-[14px]">
         ngày: {dayjs(data).format("DD/MM/YYYY")}
@@ -20,6 +58,7 @@ export const DescriptionTimeViewCount = ({
   data: any;
   margin?: string;
 }) => {
+  const themeData = getTheme();
   return (
     <div
       className={`text-[14px] ${
@@ -29,12 +68,60 @@ export const DescriptionTimeViewCount = ({
       <DescriptionDateTime
         data={data?.displayTime ?? data?.publishTime ?? data?.createTime}
       />
-      <div>
-        <FontAwesomeIcon icon={faEye} />
-        <span className="ml-1 text-[14px]">{data?.viewCount || 0}</span>
-      </div>
     </div>
   );
 };
 
 export type BreadcrumbItemType = { label: string; path?: string };
+
+export function processContent(content: any) {
+  if (!content) return "";
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, "text/html");
+
+  doc.querySelectorAll("img").forEach((img) => {
+    const dataSrc = img.getAttribute("data-src");
+    if (dataSrc) {
+      img.setAttribute("src", dataSrc);
+      img.removeAttribute("data-src");
+    }
+    img.removeAttribute("loading");
+  });
+
+  return doc.body.innerHTML;
+}
+
+export const ZaloShareButton = () => {
+  const handleZaloShare = () => {
+    window.open(`https://id.zalo.me/`, "_blank");
+  };
+
+  return (
+    <button onClick={handleZaloShare}>
+      <Image
+        src={icon_zalo}
+        alt={"icon zalo"}
+        width={18}
+        height={20}
+        className="sm:w-[22px] sm:h-[24px] cursor-pointer"
+      />
+    </button>
+  );
+};
+
+export default ZaloShareButton;
+
+export const setDataStorage = (Key: string, value?: any): boolean => {
+  try {
+    if (value) {
+      localStorage.setItem(Key, JSON.stringify(value));
+    } else {
+      localStorage.removeItem(Key);
+    }
+    return true;
+  } catch (error) {
+    console.log("Error saving data storage");
+    return false;
+  }
+};

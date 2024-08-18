@@ -3,7 +3,7 @@ import slide1 from "../../assets/img/slide1.jpg";
 
 const SlideHome = () => {
   return (
-    <div className="w-full h-full">
+    <div className="w-full">
       <Image
         style={{
           width: "100%",
