@@ -6,10 +6,10 @@ import { LatestNews } from "@/service/news.api";
 import { TypePage } from "@/service/TypePage";
 import CardItem from "@/components/card/RSSCardItem";
 import MostReadNews from "../components/NewsBlock";
-import { getTheme } from "@/shared/utils/theme/theme";
 import CardLargeItem from "@/components/card/RSSCardLargeItem";
 import { Item } from "rss-parser";
 import { HeadingPage } from "@/shared/utils/ultils";
+import { useTheme } from "@/app/ThemeProvider";
 
 const { Title } = Typography;
 
@@ -26,7 +26,7 @@ export default function NewsEvent({ data, type, lang, url }: NewsEventProps) {
   const [dataList, setDataList] = useState<any>([]);
   const [totalElements, setTotalElements] = useState<number>(0);
 
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
 
   const mappingPostTitle: { [key in TypePage]: string } = {
     [TypePage.THOISU]: "Thời sự",

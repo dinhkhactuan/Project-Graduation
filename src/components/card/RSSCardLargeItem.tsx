@@ -4,7 +4,7 @@ import CustomImage from "../custom/CustomImage";
 import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
-import { getTheme } from "@/shared/utils/theme/theme";
+import { useTheme } from "@/app/ThemeProvider";
 
 type CardLargeItem = {
   data?: Item;
@@ -14,7 +14,7 @@ type CardLargeItem = {
 
 export default function CardLargeItem(props: CardLargeItem) {
   const { data, page = false } = props;
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
 
   return (
     <>

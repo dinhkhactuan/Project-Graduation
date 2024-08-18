@@ -21,8 +21,7 @@ const SettingHome = (prop: ISettingHome) => {
       children: <Preview tab={Tab.PREVIEW_HOME} />,
     },
   ];
-  const onChange = (key: string) => {
-  };
+  const onChange = (key: string) => {};
   return (
     <>
       <Modal

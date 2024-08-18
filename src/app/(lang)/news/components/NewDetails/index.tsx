@@ -9,10 +9,8 @@ import lineSmall from "@/assets/img/line-small.png";
 import contrastLarge from "@/assets/img/contrast-large.png";
 import contrastSmall from "@/assets/img/contrast-small.png";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import Link from "next/link";
 import { INews } from "@/model/news.model";
 import ZaloShareButton, {
   DescriptionTimeViewCount,
@@ -22,7 +20,7 @@ import { ArticleData } from "../../[id]/page";
 import DOMPurify from "dompurify";
 import MostReadNews from "../NewsBlock";
 import { FacebookShareButton, TwitterShareButton } from "next-share";
-import { getTheme } from "@/shared/utils/theme/theme";
+import { useTheme } from "@/app/ThemeProvider";
 
 const FONT_SIZE = 0;
 const LINE_HEIGHT = 0;
@@ -49,7 +47,7 @@ export default function NewDetails(props: NewDetailsProps) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
   }, []);
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
 
   return (
     <>

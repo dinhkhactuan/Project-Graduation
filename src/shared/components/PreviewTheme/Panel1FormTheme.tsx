@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Select, Radio, Space, RadioChangeEvent } from "antd";
-import {
-  Theme_Option,
-  setTheme,
-  Theme_arrary,
-} from "@/shared/utils/theme/theme";
+import { Theme_Option, Theme_arrary } from "@/shared/utils/theme/theme";
 import {
   THEME_DATA_DEFAULT,
   THEME_DATA_THREE,
   THEME_DATA_TWO,
 } from "@/shared/utils/theme/themeOption";
 import { Theme } from "@/shared/utils/theme/type";
+import { useTheme } from "@/app/ThemeProvider";
 
 const Themes: { [key in Theme_Option]: Theme } = {
   [Theme_Option.THEME1]: THEME_DATA_DEFAULT,
@@ -19,6 +16,8 @@ const Themes: { [key in Theme_Option]: Theme } = {
   [Theme_Option.THEME4]: THEME_DATA_THREE,
 };
 const Panel1FormTheme = () => {
+  const { themeData, setCurrentTheme } = useTheme();
+
   const [selectedLayout, setSelectedLayout] = useState(Theme_Option.THEME1);
 
   const handleLayoutChange = (e: RadioChangeEvent) => {
@@ -26,7 +25,7 @@ const Panel1FormTheme = () => {
   };
 
   useEffect(() => {
-    setTheme(Themes[selectedLayout]);
+    setCurrentTheme(Themes[selectedLayout]);
   }, [selectedLayout]);
 
   const getRadioStyle = (value: string) => {

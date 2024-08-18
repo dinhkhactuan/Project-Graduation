@@ -18,15 +18,6 @@ export const Theme_arrary = [
   Theme_Option.THEME4,
 ];
 
-export function getTheme(): Theme {
-  if (typeof window === "undefined") {
-    return THEME_DATA_DEFAULT;
-  }
-
-  const storedTheme = localStorage.getItem(STORAGE_KEY);
-  return storedTheme ? JSON.parse(storedTheme) : THEME_DATA_DEFAULT;
-}
-
 export function setTheme(themeData: Partial<Theme>) {
   setDataStorage(STORAGE_KEY, { ...themeData });
 }

@@ -4,7 +4,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "@/assets/scss/index.scss";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import ThemeProvider from "./ThemeProvider";
+import { ThemeProvider } from "./ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 config.autoAddCss = false;
 

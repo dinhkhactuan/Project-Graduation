@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import React, { ReactNode } from "react";
 import icon_zalo from "@/assets/img/icon_zalo.png";
 import Image from "next/image";
-import { getTheme } from "./theme/theme";
+import { useTheme } from "@/app/ThemeProvider";
 
 export const HeadingPage = ({
   icon,
@@ -16,7 +16,7 @@ export const HeadingPage = ({
   path?: string;
   breadcrumb?: BreadcrumbItemType[];
 }) => {
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
   return (
     <>
       {/*<div className={'mb-4'}>{breadcrumb && <Breadcrumb breadcrumb={breadcrumb} />}</div>*/}
@@ -35,7 +35,7 @@ export const HeadingPage = ({
 };
 
 export const DescriptionDateTime = ({ data }: { data: any }) => {
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
   return (
     <div
       className="flex items-center gap-1"
@@ -58,7 +58,7 @@ export const DescriptionTimeViewCount = ({
   data: any;
   margin?: string;
 }) => {
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
   return (
     <div
       className={`text-[14px] ${

@@ -10,7 +10,7 @@ import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { ArticleData } from "../../[id]/page";
 import { LatestNews } from "@/service/news.api";
 import { Item } from "@/model/news.model";
-import { getTheme } from "@/shared/utils/theme/theme";
+import { useTheme } from "@/app/ThemeProvider";
 
 type MostReadNewsProps = {
   url: string;
@@ -28,7 +28,8 @@ export default function MostReadNews(props: MostReadNewsProps) {
     };
     getData();
   }, []);
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
+
   return (
     <div
       className="p-[16px]"

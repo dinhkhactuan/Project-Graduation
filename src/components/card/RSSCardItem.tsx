@@ -3,7 +3,7 @@ import CustomImage from "../custom/CustomImage";
 import { DescriptionTimeViewCount } from "@/shared/utils/ultils";
 import { INews, Item } from "@/model/news.model";
 import { FormCardItem } from "@/shared/home/News/ViewLayout/form";
-import { getTheme } from "@/shared/utils/theme/theme";
+import { useTheme } from "@/app/ThemeProvider";
 
 type CardItemProps = {
   data: Item;
@@ -23,7 +23,7 @@ export default function CardItem(props: CardItemProps) {
     vertical,
     formCard,
   } = props;
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
 
   return (
     <div
