@@ -12,7 +12,7 @@ const ViewLayoutDefault = () => {
         style={{ borderBottom: "4px solid #f1f1f1" }}
       >
         <div className="w-1/5	">
-          <LeftNews url="thoi-su.rss" size={2} vertical={true} />
+          <LeftNews url="thoi-su.rss" size={2} vertical={true} page={true} />
         </div>
         <div className="flex-1">
           <CenterNews url="the-gioi.rss" size={1} />
@@ -32,12 +32,13 @@ const ViewLayoutDefault = () => {
             size={3}
             classname="pr-[10px] md:border-r md:border-gray-200"
             vertical={true}
+            page={true}
           />
         </div>
         <div className="w-2/5 ">
           <RightNews
             url="the-thao.rss"
-            size={9}
+            size={8}
             className="md:border-r md:border-gray-200"
           />
         </div>
@@ -62,6 +63,7 @@ const ViewLayoutDefault = () => {
             size={6}
             classname="pr-[10px] md:border-r md:border-gray-200"
             vertical={true}
+            page={true}
           />
         </div>
         <div className="w-1/3 ">
@@ -70,6 +72,7 @@ const ViewLayoutDefault = () => {
             size={6}
             classname="pr-[10px] md:border-r md:border-gray-200"
             vertical={true}
+            page={true}
           />
         </div>
         <div className="w-1/3	">
@@ -78,6 +81,7 @@ const ViewLayoutDefault = () => {
             size={6}
             classname="pr-[10px] md:border-r md:border-gray-200"
             vertical={true}
+            page={true}
           />
         </div>
         <div className="w-1/3	">
@@ -86,6 +90,7 @@ const ViewLayoutDefault = () => {
             size={6}
             classname="pr-[10px] md:border-r md:border-gray-200"
             vertical={true}
+            page={true}
           />
         </div>
       </div>
@@ -95,7 +100,7 @@ const ViewLayoutDefault = () => {
         style={{ borderBottom: "4px solid #f1f1f1" }}
       >
         <div className="w-1/5	">
-          <LeftNews url="du-lich.rss" size={2} vertical={true} />
+          <LeftNews url="du-lich.rss" size={2} vertical={true} page={true} />
         </div>
         <div className="flex-1">
           <CenterNews url="khoa-hoc.rss" size={1} />
@@ -110,7 +115,12 @@ const ViewLayoutDefault = () => {
         style={{ borderBottom: "4px solid #f1f1f1" }}
       >
         <div className="w-1/5	">
-          <LeftNews url="tin-moi-nhat.rss" size={2} vertical={true} />
+          <LeftNews
+            url="tin-moi-nhat.rss"
+            size={2}
+            vertical={true}
+            page={true}
+          />
         </div>
         <div className="flex-1">
           <CenterNews url="tin-noi-bat.rss" size={1} />
@@ -149,6 +159,7 @@ const ViewLayoutDefault = () => {
           <LeftNews
             url="tam-su.rss"
             size={4}
+            page={false}
             classname="pr-[10px] h-full"
             form={FormCardItem.NO_DATE}
           />

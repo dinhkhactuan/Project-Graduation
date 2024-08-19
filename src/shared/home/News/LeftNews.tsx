@@ -12,9 +12,10 @@ interface ILeftNews {
   classname?: string;
   form?: FormCardItem;
   url: string;
+  page?: boolean;
 }
 const LeftNews = (prop: ILeftNews) => {
-  const { size, vertical, classname, form, url } = prop;
+  const { size, vertical, classname, form, url, page } = prop;
   const [datas, setDatas] = useState<any>();
   const router = useRouter();
 
@@ -46,7 +47,7 @@ const LeftNews = (prop: ILeftNews) => {
                 key={index}
                 data={item}
                 formCard={form}
-                page={true}
+                page={page}
                 vertical={vertical}
               />
             </div>

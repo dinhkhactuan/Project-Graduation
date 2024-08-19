@@ -39,8 +39,10 @@ export default function CardItem(props: CardItemProps) {
     >
       <div
         className={`w-full  h-full shrink-0 ${
-          !vertical ? "md:w-[120px] xl:w-[100px]" : "w-full  h-full"
-        } ${page && "md:w-[190px] xl:w-[190px]"}`}
+          !vertical
+            ? "md:w-[120px] xl:w-[100px] w-full  h-full"
+            : "w-full  h-full"
+        } ${page ? "md:w-[190px] xl:w-[190px]" : "md:w-[120px] xl:w-[100px]"}`}
         style={{
           overflow: "hidden",
         }}
