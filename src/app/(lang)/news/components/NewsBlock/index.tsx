@@ -1,14 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import dayjs from "dayjs";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
-import { VNEXPRESS } from "@/service/host";
 import CustomImage from "@/components/custom/CustomImage";
 import { DescriptionDateTime } from "@/shared/utils/ultils";
-import { ArticleData } from "../../[id]/page";
-import { LatestNews } from "@/service/news.api";
+import { LatestNews } from "@/service/store/news/news.api";
 import { Item } from "@/model/news.model";
 import { useTheme } from "@/app/ThemeProvider";
 

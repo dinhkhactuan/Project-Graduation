@@ -1,9 +1,13 @@
 import React from "react";
 import CustomImage from "../custom/CustomImage";
-import { DescriptionTimeViewCount } from "@/shared/utils/ultils";
-import { INews, Item } from "@/model/news.model";
+import {
+  DescriptionTimeViewCount,
+  handleNavigateNewsDetail,
+} from "@/shared/utils/ultils";
+import { Item } from "@/model/news.model";
 import { FormCardItem } from "@/shared/home/News/ViewLayout/form";
 import { useTheme } from "@/app/ThemeProvider";
+import { useRouter } from "next/navigation";
 
 type CardItemProps = {
   data: Item;
@@ -23,10 +27,14 @@ export default function CardItem(props: CardItemProps) {
     vertical,
     formCard,
   } = props;
-  const { themeData, setCurrentTheme } = useTheme();
+  const { themeData } = useTheme();
+  const router = useRouter();
 
   return (
     <div
+      onClick={() => {
+        handleNavigateNewsDetail(data, router);
+      }}
       style={{ borderBottom: `${horizontalLines ? "1px solid #eee" : ""}` }}
       className={`card-item flex ${
         vertical

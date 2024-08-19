@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Select, Radio, Space, RadioChangeEvent } from "antd";
+import { Form, Radio, Space, RadioChangeEvent } from "antd";
 import { Theme_Option, Theme_arrary } from "@/shared/utils/theme/theme";
 import {
   THEME_DATA_DEFAULT,

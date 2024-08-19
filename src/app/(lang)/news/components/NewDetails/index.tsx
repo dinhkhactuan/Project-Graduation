@@ -11,7 +11,6 @@ import contrastSmall from "@/assets/img/contrast-small.png";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { INews } from "@/model/news.model";
 import ZaloShareButton, {
   DescriptionTimeViewCount,
   processContent,

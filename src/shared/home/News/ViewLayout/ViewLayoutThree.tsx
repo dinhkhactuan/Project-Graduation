@@ -1,7 +1,3 @@
-import Banner from "../../Banner";
-import CenterNews from "../CenterNews";
-import LeftNews from "../LeftNews";
-import RightNews from "../RightNews";
 
 const ViewLayoutThree = () => {
   return (

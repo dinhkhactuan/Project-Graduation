@@ -1,10 +1,9 @@
 "use client";
 import CardItem from "@/components/card/RSSCardItem";
 import { Item } from "@/model/news.model";
-import { LatestNews } from "@/service/news.api";
+import { LatestNews } from "@/service/store/news/news.api";
 import { useEffect, useState } from "react";
 import { FormCardItem } from "./ViewLayout/form";
-import { useRouter } from "next/navigation";
 
 interface ILeftNews {
   size?: number;
@@ -17,7 +16,6 @@ interface ILeftNews {
 const LeftNews = (prop: ILeftNews) => {
   const { size, vertical, classname, form, url, page } = prop;
   const [datas, setDatas] = useState<any>();
-  const router = useRouter();
 
   useEffect(() => {
     const getData = async () => {
@@ -26,10 +24,7 @@ const LeftNews = (prop: ILeftNews) => {
     };
     getData();
   }, []);
-  const handleItemClick = (item: Item) => {
-    const id = btoa(item.link).replace(/=/g, "");
-    router.push(`/news/${id}`);
-  };
+
   return (
     <div className={`${classname}`}>
       {(size ? datas?.items?.slice(0, size) : datas?.items)?.map(
@@ -37,7 +32,6 @@ const LeftNews = (prop: ILeftNews) => {
           return (
             <div
               key={index}
-              onClick={() => handleItemClick(item)}
               style={{
                 padding: "0 10px",
                 marginBottom: "10px",

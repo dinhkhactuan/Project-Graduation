@@ -1,6 +1,4 @@
-import React from "react";
 import { Theme } from "./type"; // Định nghĩa kiểu Theme nếu cần
-import { THEME_DATA_DEFAULT } from "./themeOption";
 import { setDataStorage } from "../ultils";
 
 export const STORAGE_KEY = "app_theme";

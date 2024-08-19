@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Layout, Menu, MenuProps, Modal, theme } from "antd";
+import { Layout, Menu, MenuProps, Tooltip } from "antd";
 import Image from "next/image";
 import Search, { SearchProps } from "antd/es/input/Search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,7 @@ import { faCloud, faGear } from "@fortawesome/free-solid-svg-icons";
 import SettingHome from "../components/SettingHome";
 import { useMenuItems } from "./itemsMenu.model";
 import Link from "next/link";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 const { Header } = Layout;
 
@@ -21,7 +22,6 @@ const HeaderHome = () => {
   const menuItems = useMenuItems();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState("mail");
-
   const onClick: MenuProps["onClick"] = (e) => {
     setCurrent(e.key);
   };
@@ -86,7 +86,14 @@ const HeaderHome = () => {
             enterButton
           />
           <div>
-            <FontAwesomeIcon icon={faGear} size="xl" onClick={showModal} />
+            <Tooltip title={"Cài đặt"} className="mr-[14px]">
+              <FontAwesomeIcon icon={faGear} size="xl" onClick={showModal} />
+            </Tooltip>
+            <Tooltip title={"Đăng nhập"}>
+              <Link href={"/login"} target="_blank">
+                <FontAwesomeIcon icon={faUser} size="xl" />
+              </Link>
+            </Tooltip>
             <SettingHome
               handleCancel={handleCancel}
               handleOk={handleOk}

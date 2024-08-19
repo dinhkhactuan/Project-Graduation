@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { STORAGE_KEY } from "@/shared/utils/theme/theme";
 import { setTheme } from "@/shared/utils/theme/theme";
 import { THEME_DATA_DEFAULT } from "@/shared/utils/theme/themeOption";

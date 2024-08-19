@@ -1,7 +1,7 @@
 "use client";
 import CardItem from "@/components/card/RSSCardItem";
 import { Item } from "@/model/news.model";
-import { LatestNews } from "@/service/news.api";
+import { LatestNews } from "@/service/store/news/news.api";
 import { useEffect, useState } from "react";
 
 interface IRightNews {

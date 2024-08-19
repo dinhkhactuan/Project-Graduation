@@ -1,10 +1,14 @@
-import { INews, Item } from "@/model/news.model";
+import { Item } from "@/model/news.model";
 import React from "react";
 import CustomImage from "../custom/CustomImage";
-import { DescriptionDateTime } from "@/shared/utils/ultils";
+import {
+  DescriptionDateTime,
+  handleNavigateNewsDetail,
+} from "@/shared/utils/ultils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@/app/ThemeProvider";
+import { useRouter } from "next/navigation";
 
 type CardLargeItem = {
   data?: Item;
@@ -16,10 +20,16 @@ export default function CardLargeItem(props: CardLargeItem) {
   const { data, page = false } = props;
   const { themeData, setCurrentTheme } = useTheme();
 
+  const router = useRouter();
   return (
     <>
       {data && (
-        <div className={`card-item cursor-pointer`}>
+        <div
+          className={`card-item cursor-pointer`}
+          onClick={() => {
+            handleNavigateNewsDetail(data, router);
+          }}
+        >
           <div
             className="w-full shrink-0"
             style={{

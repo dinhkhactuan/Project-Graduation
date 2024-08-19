@@ -1,5 +1,5 @@
 import Parser from "rss-parser";
-import { VNEXPRESS } from "./host";
+import { VNEXPRESS } from "@/service/host";
 
 export const LatestNews = async (url: string) => {
   const parser = new Parser();

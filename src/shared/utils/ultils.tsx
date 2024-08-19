@@ -5,6 +5,8 @@ import React, { ReactNode } from "react";
 import icon_zalo from "@/assets/img/icon_zalo.png";
 import Image from "next/image";
 import { useTheme } from "@/app/ThemeProvider";
+import { Item } from "@/model/news.model";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const HeadingPage = ({
   icon,
@@ -16,7 +18,7 @@ export const HeadingPage = ({
   path?: string;
   breadcrumb?: BreadcrumbItemType[];
 }) => {
-  const { themeData, setCurrentTheme } = useTheme();
+  const { themeData } = useTheme();
   return (
     <>
       {/*<div className={'mb-4'}>{breadcrumb && <Breadcrumb breadcrumb={breadcrumb} />}</div>*/}
@@ -124,4 +126,12 @@ export const setDataStorage = (Key: string, value?: any): boolean => {
     console.log("Error saving data storage");
     return false;
   }
+};
+
+export const handleNavigateNewsDetail = (
+  item: Item,
+  router: AppRouterInstance
+) => {
+  const id = btoa(item.link).replace(/=/g, "");
+  router.push(`/news/${id}`);
 };

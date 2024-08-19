@@ -1,4 +1,4 @@
-import { LatestNews } from "@/service/news.api";
+import { LatestNews } from "@/service/store/news/news.api";
 import NewsEvent from "./newsEvent/NewsEvent";
 import { TypePage } from "@/service/TypePage";
 
