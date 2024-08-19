@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CustomImage from "../custom/CustomImage";
 import { DescriptionTimeViewCount } from "@/shared/utils/ultils";
 import { Item } from "@/model/news.model";

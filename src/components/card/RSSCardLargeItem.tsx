@@ -5,7 +5,6 @@ import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@/app/ThemeProvider";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 type CardLargeItem = {

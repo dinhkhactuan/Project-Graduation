@@ -5,8 +5,6 @@ import React, { ReactNode } from "react";
 import icon_zalo from "@/assets/img/icon_zalo.png";
 import Image from "next/image";
 import { useTheme } from "@/app/ThemeProvider";
-import { Item } from "@/model/news.model";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const HeadingPage = ({
   icon,
