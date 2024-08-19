@@ -127,11 +127,3 @@ export const setDataStorage = (Key: string, value?: any): boolean => {
     return false;
   }
 };
-
-export const handleNavigateNewsDetail = (
-  item: Item,
-  router: AppRouterInstance
-) => {
-  const id = btoa(item.link).replace(/=/g, "");
-  router.push(`/news/${id}`);
-};

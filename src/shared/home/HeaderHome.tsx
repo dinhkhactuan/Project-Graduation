@@ -10,18 +10,17 @@ import SettingHome from "../components/SettingHome";
 import { useMenuItems } from "./itemsMenu.model";
 import Link from "next/link";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { useTheme } from "@/app/ThemeProvider";
 
 const { Header } = Layout;
-
-const items = new Array(3).fill(null).map((_, index) => ({
-  key: String(index + 1),
-  label: `nav ${index + 1}`,
-}));
 
 const HeaderHome = () => {
   const menuItems = useMenuItems();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState("mail");
+  const { themeData, setCurrentTheme } = useTheme();
+  const [currenTheme] = useState(themeData);
+
   const onClick: MenuProps["onClick"] = (e) => {
     setCurrent(e.key);
   };
@@ -37,6 +36,7 @@ const HeaderHome = () => {
   };
 
   const handleCancel = () => {
+    setCurrentTheme(currenTheme);
     setIsModalOpen(false);
   };
 

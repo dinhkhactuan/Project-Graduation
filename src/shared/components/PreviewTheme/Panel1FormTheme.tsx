@@ -25,7 +25,7 @@ const Panel1FormTheme = () => {
   };
 
   useEffect(() => {
-    setCurrentTheme(Themes[selectedLayout]);
+    setCurrentTheme(() => Themes[selectedLayout]);
   }, [selectedLayout]);
 
   const getRadioStyle = (value: string) => {
@@ -47,9 +47,10 @@ const Panel1FormTheme = () => {
     return {
       ...baseStyle,
       backgroundColor: "#f0f0f0",
-      color: "rgba(0, 0, 0, 0.88)", // Default text color in Ant Design
+      color: "rgba(0, 0, 0, 0.88)",
     };
   };
+
   return (
     <Form layout="vertical">
       <Form.Item label="Danh sách chủ đề">
