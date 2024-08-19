@@ -16,7 +16,7 @@ const Themes: { [key in Theme_Option]: Theme } = {
   [Theme_Option.THEME4]: THEME_DATA_THREE,
 };
 const Panel1FormTheme = () => {
-  const { themeData, setCurrentTheme } = useTheme();
+  const { setCurrentTheme } = useTheme();
 
   const [selectedLayout, setSelectedLayout] = useState(Theme_Option.THEME1);
 
