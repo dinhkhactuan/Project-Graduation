@@ -5,6 +5,8 @@ import React, { ReactNode } from "react";
 import icon_zalo from "@/assets/img/icon_zalo.png";
 import Image from "next/image";
 import { useTheme } from "@/app/ThemeProvider";
+import { KEYS_STORAGE } from "@/service/host";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
 export const HeadingPage = ({
   icon,
@@ -123,5 +125,32 @@ export const setDataStorage = (Key: string, value?: any): boolean => {
   } catch (error) {
     console.log("Error saving data storage");
     return false;
+  }
+};
+
+export const setDataCookie = (name: KEYS_STORAGE, value?: any): boolean => {
+  try {
+    if (value) {
+      setCookie(name, JSON.stringify(value));
+    } else {
+      deleteCookie(name);
+    }
+    return true;
+  } catch (error) {
+    console.log("Error saving cookie");
+    return false;
+  }
+};
+
+export const getDataCookie = (name: KEYS_STORAGE) => {
+  try {
+    const data = getCookie(name);
+    if (data) {
+      return JSON.parse(data);
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log("Error retrieving data cookie");
   }
 };
