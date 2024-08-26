@@ -9,14 +9,14 @@ import {
 import { Theme } from "@/shared/utils/theme/type";
 import { useTheme } from "@/app/ThemeProvider";
 
-const Themes: { [key in Theme_Option]: Theme } = {
+export const Themes: { [key in Theme_Option]: Theme } = {
   [Theme_Option.THEME1]: THEME_DATA_DEFAULT,
   [Theme_Option.THEME2]: THEME_DATA_TWO,
   [Theme_Option.THEME3]: THEME_DATA_THREE,
   [Theme_Option.THEME4]: THEME_DATA_THREE,
 };
 const Panel1FormTheme = () => {
-  const { setCurrentTheme } = useTheme();
+  const { themeData, setCurrentTheme } = useTheme();
 
   const [selectedLayout, setSelectedLayout] = useState(Theme_Option.THEME1);
 
@@ -64,7 +64,7 @@ const Panel1FormTheme = () => {
               <Radio
                 key={layout}
                 value={layout}
-                checked={selectedLayout === Theme_Option.THEME1}
+                checked={themeData === Themes[selectedLayout]}
                 style={getRadioStyle(layout)}
               >
                 {`Chủ đề ${layout.slice(-1)}`}

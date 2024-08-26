@@ -1,13 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Select, Radio, Space, RadioChangeEvent } from "antd";
+import { Theme_arrary, Theme_Option } from "@/shared/utils/theme/theme";
+import { useTheme } from "@/app/ThemeProvider";
+import { Themes } from "../PreviewTheme/Panel1FormTheme";
 
 const { Option } = Select;
 
 const Panel1Form = () => {
   const [selectedLayout, setSelectedLayout] = useState("layout1");
+  const { themeData, setCurrentTheme } = useTheme();
+  const [form] = Form.useForm();
+
+  const getCurrentThemeOption = () => {
+    return Object.entries(Themes).find(
+      ([, theme]) => theme === themeData
+    )?.[0] as Theme_Option | undefined;
+  };
+
+  useEffect(() => {
+    const currentThemeOption = getCurrentThemeOption();
+    if (currentThemeOption) {
+      form.setFieldsValue({ page: currentThemeOption });
+    }
+  }, [themeData, form]);
 
   const handleLayoutChange = (e: RadioChangeEvent) => {
     setSelectedLayout(e.target.value);
+  };
+
+  const handleThemeChange = (value: Theme_Option) => {
+    setCurrentTheme(() => Themes[value]);
   };
 
   const getRadioStyle = (value: string) => {
@@ -32,24 +54,17 @@ const Panel1Form = () => {
       color: "rgba(0, 0, 0, 0.88)", // Default text color in Ant Design
     };
   };
+
   return (
-    <Form layout="vertical">
+    <Form form={form} layout="vertical">
       <Form.Item
         className="!mb-[8px]"
         name="name"
         label={<span>Tên giao diện</span>}
         rules={[{ required: true, message: "Vui lòng nhập tên giao diện" }]}
+        initialValue="Trang chủ"
       >
-        <Input placeholder="Nhập tên giao diện..." />
-      </Form.Item>
-
-      <Form.Item
-        className="!mb-[8px]"
-        name="description"
-        label={<span>Mô tả</span>}
-        rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
-      >
-        <Input placeholder="Nhập mô tả..." />
+        <Input />
       </Form.Item>
 
       <Form.Item
@@ -58,10 +73,12 @@ const Panel1Form = () => {
         label={<span>Chủ đề</span>}
         rules={[{ required: true, message: "Vui lòng chọn trang" }]}
       >
-        <Select placeholder="Chọn chủ đề...">
-          <Option value="page1">Chủ đề 1</Option>
-          <Option value="page2">Chủ đề 2</Option>
-          <Option value="page3">Chủ đề 3</Option>
+        <Select placeholder="Chọn chủ đề..." onChange={handleThemeChange}>
+          {Theme_arrary.map((theme: Theme_Option) => (
+            <Option key={theme} value={theme}>
+              {theme}
+            </Option>
+          ))}
         </Select>
       </Form.Item>
 
