@@ -2,7 +2,6 @@ import { KEYS_STORAGE } from "@/service/host";
 import { IUser } from "@/model/user.model";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  getUserInfo,
   ILoginOAuth2Response,
   loginOAuth2,
   logoutOAuth2,
