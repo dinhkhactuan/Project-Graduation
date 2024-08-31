@@ -9,14 +9,52 @@ import {
   UploadOutlined,
   PieChartOutlined,
 } from "@ant-design/icons";
+import Dashboard from "./Home";
 
 const { Header, Sider, Content } = Layout;
 
+const nav = [
+  {
+    key: "1",
+    icon: <PieChartOutlined />,
+    label: "DashBoard",
+    page: <Dashboard />,
+  },
+  {
+    key: "2",
+    icon: <UserOutlined />,
+    label: "Quản lý người dùng",
+    page: <div>Quản lý người dùng</div>, // Nội dung ví dụ
+  },
+  {
+    key: "3",
+    icon: <VideoCameraOutlined />,
+    label: "Quản lý quảng cáo",
+    page: <div>Quản lý quảng cáo</div>, // Nội dung ví dụ
+  },
+  {
+    key: "4",
+    icon: <UploadOutlined />,
+    label: "Quản lý tệp tin",
+    page: <div>Quản lý tệp tin</div>, // Nội dung ví dụ
+  },
+];
+
 const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [selectedKey, setSelectedKey] = useState<string>("1");
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const handleMenuClick = (e: { key: string }) => {
+    setSelectedKey(e.key);
+  };
+
+  const getContent = () => {
+    const currentNav = nav.find((item) => item.key === selectedKey);
+    return currentNav ? currentNav.page : null;
+  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -26,28 +64,9 @@ const App: React.FC = () => {
           theme="dark"
           mode="inline"
           defaultSelectedKeys={["1"]}
-          items={[
-            {
-              key: "1",
-              icon: <PieChartOutlined />,
-              label: "DashBoard",
-            },
-            {
-              key: "2",
-              icon: <UserOutlined />,
-              label: "Quản lý người dùng",
-            },
-            {
-              key: "3",
-              icon: <VideoCameraOutlined />,
-              label: "Quản lý quảng cáo",
-            },
-            {
-              key: "4",
-              icon: <UploadOutlined />,
-              label: "Quản lý tệp tin",
-            },
-          ]}
+          selectedKeys={[selectedKey]}
+          onClick={handleMenuClick}
+          items={nav}
         />
       </Sider>
       <Layout>
@@ -71,7 +90,7 @@ const App: React.FC = () => {
             background: colorBgContainer,
           }}
         >
-          Nội dung của trang CMS sẽ hiển thị ở đây.
+          {getContent()}
         </Content>
       </Layout>
     </Layout>

@@ -7,7 +7,7 @@ import {
   THEME_DATA_TWO,
 } from "@/shared/utils/theme/themeOption";
 import { Theme } from "@/shared/utils/theme/type";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
 
 export const Themes: { [key in Theme_Option]: Theme } = {
   [Theme_Option.THEME1]: THEME_DATA_DEFAULT,

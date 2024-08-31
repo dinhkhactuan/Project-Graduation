@@ -4,9 +4,9 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "@/assets/scss/index.scss";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { ThemeProvider } from "./ThemeProvider";
-import { Providers } from "./Provider";
-import { AuthProvider } from "./AuthProvider";
+import { ThemeProvider } from "./(provider)/ThemeProvider";
+import { Providers } from "./(provider)/Provider";
+import { AuthProvider } from "./(provider)/AuthProvider";
 const inter = Inter({ subsets: ["latin"] });
 config.autoAddCss = false;
 

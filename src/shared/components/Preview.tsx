@@ -2,7 +2,7 @@ import { Col, Divider, Row } from "antd";
 import Panel1Form from "./PreviewHome/Panel1Form";
 import { Tab } from "./tab";
 import Panel1FormTheme from "./PreviewTheme/Panel1FormTheme";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
 
 interface IPreview {
   tab: Tab;

@@ -3,7 +3,7 @@ import CustomImage from "../custom/CustomImage";
 import { DescriptionTimeViewCount } from "@/shared/utils/ultils";
 import { Item } from "@/model/news.model";
 import { FormCardItem } from "@/shared/home/News/ViewLayout/form";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
 import Link from "next/link";
 
 type CardItemProps = {

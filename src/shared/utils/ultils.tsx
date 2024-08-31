@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import React, { ReactNode } from "react";
 import icon_zalo from "@/assets/img/icon_zalo.png";
 import Image from "next/image";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
 import { KEYS_STORAGE } from "@/service/host";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
 

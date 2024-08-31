@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Select, Radio, Space, RadioChangeEvent } from "antd";
 import { Theme_arrary, Theme_Option } from "@/shared/utils/theme/theme";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
 import { Themes } from "../PreviewTheme/Panel1FormTheme";
 
 const { Option } = Select;

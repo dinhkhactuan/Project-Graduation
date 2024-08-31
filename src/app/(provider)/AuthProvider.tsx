@@ -1,7 +1,6 @@
 "use client";
 
 import { KEYS_STORAGE } from "@/service/host";
-// import { getUserInfo } from "@/services/store/auth/auth.api";
 import { setToken } from "@/service/store/auth/auth.reducer";
 import { AppDispatch } from "@/service/store/store";
 import { getDataCookie } from "@/shared/utils/ultils";
@@ -22,13 +21,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (tempToken) {
       dispatch(setToken(tempToken));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-
-  useEffect(() => {
-    if (!token) return;
-
-    // dispatch(getUserInfo());
   }, [token]);
 
   return <>{children}</>;

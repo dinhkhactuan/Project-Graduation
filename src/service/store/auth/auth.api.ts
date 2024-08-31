@@ -5,14 +5,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getDataCookie } from "@/shared/utils/ultils";
 
 export interface ILoginForm {
-  // randomStr: string;
-  code: string;
-  grant_type: string;
-  scope: string;
-  username: string;
-  password: string;
-  rememberMe: boolean;
-  label?: string;
+  userName: string;
+  userPassword: string;
 }
 
 export const getUserInfo = createAsyncThunk(
@@ -39,9 +33,7 @@ export const loginOAuth2 = createAsyncThunk(
   `login-oauth`,
   async (body: ILoginForm, thunkAPI) => {
     try {
-      const { data } = await axiosInstance.post<ILoginOAuth2Response>(
-        `auth/oauth2/token`
-      );
+      const { data } = await axiosInstance.post<any>(`/auth/login`, body);
       return data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -55,7 +47,7 @@ export const logoutOAuth2 = createAsyncThunk(
     try {
       const token = getDataCookie(KEYS_STORAGE.USER_TOKEN);
 
-      const { data } = await axiosInstance.delete(`auth/token/logout`, {
+      const { data } = await axiosInstance.delete(`/auth/logout`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

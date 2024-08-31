@@ -1,28 +1,40 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { loginOAuth2 } from "@/service/store/auth/auth.api";
+import { RootState } from "@/service/store/reducers";
+import { useRouter } from "next/navigation";
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required("Please input your username!"),
-  password: Yup.string().required("Please input your password!"),
-  remember: Yup.boolean(),
+  userName: Yup.string().required("Please input your username!"),
+  userPassword: Yup.string().required("Please input your password!"),
 });
 
 const initialValues = {
-  username: "",
-  password: "",
-  remember: false,
+  userName: "",
+  userPassword: "",
 };
 
-const App: React.FC = () => {
+const LoginForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { token, loginSuccess } = useSelector((state: RootState) => state.auth);
+
   const onSubmit = (
     values: typeof initialValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    console.log("Success:", values);
+    dispatch(loginOAuth2(values) as any);
     setSubmitting(false);
   };
+
+  useEffect(() => {
+    if (token) {
+      router.push("/dasboard");
+    }
+  }, [token]);
 
   return (
     <div
@@ -62,14 +74,14 @@ const App: React.FC = () => {
             <Form>
               <div style={{ marginBottom: "15px" }}>
                 <label
-                  htmlFor="username"
+                  htmlFor="userName"
                   style={{ display: "block", marginBottom: "5px" }}
                 >
                   Username
                 </label>
                 <Field
                   type="text"
-                  name="username"
+                  name="userName"
                   style={{
                     width: "100%",
                     padding: "8px",
@@ -78,7 +90,7 @@ const App: React.FC = () => {
                   }}
                 />
                 <ErrorMessage
-                  name="username"
+                  name="userName"
                   component="div"
                   className="text-red-500"
                 />
@@ -86,14 +98,14 @@ const App: React.FC = () => {
 
               <div style={{ marginBottom: "15px" }}>
                 <label
-                  htmlFor="password"
+                  htmlFor="userPassword"
                   style={{ display: "block", marginBottom: "5px" }}
                 >
                   Password
                 </label>
                 <Field
                   type="password"
-                  name="password"
+                  name="userPassword"
                   style={{
                     width: "100%",
                     padding: "8px",
@@ -102,21 +114,10 @@ const App: React.FC = () => {
                   }}
                 />
                 <ErrorMessage
-                  name="password"
+                  name="userPassword"
                   component="div"
                   className="text-red-500"
                 />
-              </div>
-
-              <div style={{ marginBottom: "15px" }}>
-                <label style={{ display: "flex", alignItems: "center" }}>
-                  <Field
-                    type="checkbox"
-                    name="remember"
-                    style={{ marginRight: "8px" }}
-                  />
-                  <span>Remember me</span>
-                </label>
               </div>
 
               <button
@@ -143,4 +144,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default LoginForm;

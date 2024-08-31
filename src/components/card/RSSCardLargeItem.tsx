@@ -4,7 +4,7 @@ import CustomImage from "../custom/CustomImage";
 import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
 import Link from "next/link";
 
 type CardLargeItem = {

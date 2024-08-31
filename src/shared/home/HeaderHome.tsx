@@ -10,7 +10,7 @@ import SettingHome from "../components/SettingHome";
 import { useMenuItems } from "./itemsMenu.model";
 import Link from "next/link";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app//(provider)/ThemeProvider";
 
 const { Header } = Layout;
 
