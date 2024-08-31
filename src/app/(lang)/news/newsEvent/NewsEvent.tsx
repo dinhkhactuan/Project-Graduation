@@ -8,7 +8,7 @@ import MostReadNews from "../components/NewsBlock";
 import CardLargeItem from "@/components/card/RSSCardLargeItem";
 import { Item } from "rss-parser";
 import { HeadingPage } from "@/shared/utils/ultils";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
 
 const { Title } = Typography;
 
