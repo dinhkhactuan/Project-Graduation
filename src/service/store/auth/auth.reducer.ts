@@ -1,5 +1,4 @@
 import { KEYS_STORAGE } from "@/service/host";
-import { IUser } from "@/model/user.model";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ILoginOAuth2Response, loginOAuth2, logoutOAuth2 } from "./auth.api";
 import { setDataCookie } from "@/shared/utils/ultils";
