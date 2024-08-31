@@ -13,6 +13,6 @@ const AuthProtected = ({ children }: { children: React.ReactNode }) => {
       router.push("/login");
     }
   }, [token]);
-  return children;
+  return <>{children}</>;
 };
 export default AuthProtected;
