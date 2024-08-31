@@ -4,7 +4,7 @@ import CustomImage from "@/components/custom/CustomImage";
 import { DescriptionDateTime } from "@/shared/utils/ultils";
 import { LatestNews } from "@/service/store/news/news.api";
 import { Item } from "@/model/news.model";
-import { useTheme } from "@/app/ThemeProvider";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
 
 type MostReadNewsProps = {
   url: string;
