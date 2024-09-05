@@ -10,11 +10,13 @@ import { useRouter } from "next/navigation";
 const validationSchema = Yup.object().shape({
   userName: Yup.string().required("Please input your username!"),
   userPassword: Yup.string().required("Please input your password!"),
+  role: Yup.string().required("Please select a role!"),
 });
 
 const initialValues = {
   userName: "",
   userPassword: "",
+  role: "admin",
 };
 
 const LoginForm: React.FC = () => {
@@ -32,7 +34,7 @@ const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (token) {
-      router.push("/dasboard");
+      router.push("/cms/dashboard");
     }
   }, [token]);
 
@@ -72,6 +74,36 @@ const LoginForm: React.FC = () => {
         >
           {({ isSubmitting }) => (
             <Form>
+              <div style={{ marginBottom: "15px" }}>
+                <label
+                  htmlFor="role"
+                  style={{ display: "block", marginBottom: "5px" }}
+                >
+                  Vai trò
+                </label>
+                <Field
+                  as="select"
+                  name="role"
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    border: "1px solid #d9d9d9",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <option style={{ cursor: "pointer" }} value="admin">
+                    Admin
+                  </option>
+                  <option style={{ cursor: "pointer" }} value="nhà quảng cáo">
+                    Nhà Quảng Cáo
+                  </option>
+                </Field>
+                <ErrorMessage
+                  name="role"
+                  component="div"
+                  className="text-red-500"
+                />
+              </div>
               <div style={{ marginBottom: "15px" }}>
                 <label
                   htmlFor="userName"

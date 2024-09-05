@@ -1,10 +1,14 @@
-import Parser from "rss-parser";
-import { VNEXPRESS } from "@/service/host";
+import { transformDataRss } from "@/shared/utils/ultils";
 
 export const LatestNews = async (url: string) => {
-  const parser = new Parser();
   try {
-    return await parser.parseURL(`${VNEXPRESS}${url}`);
+    const response = await fetch(`/rss/${encodeURIComponent(url)}`);
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+    const data = await response.json();
+
+    return transformDataRss(data?.rss?.channel);
   } catch (error) {
     console.error("Lỗi khi tải RSS:", error);
   }

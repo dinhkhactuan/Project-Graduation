@@ -24,6 +24,7 @@
     "cookies-next": "^4.2.1",
     "dayjs": "^1.11.12",
     "dompurify": "^3.1.6",
+    "fast-xml-parser": "^4.4.1",
     "formik": "^2.4.6",
     "husky": "^9.1.4",
     "next": "14.2.5",

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useTheme } from "@/app/(provider)/ThemeProvider";
 import { KEYS_STORAGE } from "@/service/host";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
+import { Feed } from "@/model/rss";
 
 export const HeadingPage = ({
   icon,
@@ -153,4 +154,33 @@ export const getDataCookie = (name: KEYS_STORAGE) => {
   } catch (error) {
     console.log("Error retrieving data cookie");
   }
+};
+
+export const transformDataRss = (data: any): Feed => {
+  return {
+    items: data.item.map((item: any) => ({
+      title: item.title,
+      link: item.link,
+      pubDate: item.pubDate,
+      enclosure: {
+        type: item.enclosure ? item.enclosure.type : "image/jpeg",
+        length: item.enclosure ? item.enclosure.length : "1200",
+        url: item.enclosure ? item.enclosure.url : "",
+      },
+      content: item.description,
+      contentSnippet: item.description.replace(/<.*?>/g, ""), // remove HTML tags
+      guid: item.guid,
+      isoDate: new Date(item.pubDate).toISOString(),
+    })),
+    image: {
+      link: data.image.link,
+      url: data.image.url,
+      title: data.image.title,
+    },
+    title: data.title,
+    description: data.description,
+    pubDate: data.pubDate,
+    generator: data.generator,
+    link: data.link,
+  };
 };

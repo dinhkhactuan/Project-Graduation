@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Row, Col, Card, Statistic, Table, Typography, Progress } from "antd";
 import {
