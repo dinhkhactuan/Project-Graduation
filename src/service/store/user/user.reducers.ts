@@ -4,13 +4,7 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import {
-  createUser,
-  deleteUser,
-  getUser,
-  getUsers,
-  updateUser,
-} from "./user.api";
+import { createUser, getUsers } from "./user.api";
 import { setDataCookie } from "@/shared/utils/ultils";
 import { IUser } from "@/model/user.model";
 
@@ -55,7 +49,7 @@ const { actions, reducer } = createSlice({
     builder.addCase(
       getUsers.fulfilled,
       (state, { payload }: PayloadAction<IUser[]>) => {
-        userAdapter.setAll(state, payload);
+        userAdapter.setAll(state as any, payload);
         state.loading = false;
       }
     );

@@ -1,8 +1,5 @@
 import axiosInstance from "@/service/config/axios-interceptor";
-import { KEYS_STORAGE } from "@/service/host";
-import { IUser } from "@/model/user.model";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getDataCookie } from "@/shared/utils/ultils";
 
 const prefix = "/user";
 

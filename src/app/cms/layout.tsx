@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Layout, Button, Avatar } from "antd";
+import { Layout, Button } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Sidebar from "../../shared/home/Sidebar";
 import AuthProtected from "../(provider)/AuthProtected";

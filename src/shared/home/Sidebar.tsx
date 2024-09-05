@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Layout, Menu, Avatar, Typography } from "antd";
+import { Layout, Menu } from "antd";
 import {
   DashboardOutlined,
   UserOutlined,
