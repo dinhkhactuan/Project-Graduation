@@ -1,7 +1,7 @@
 "use client";
 import CardItem from "@/components/card/RSSCardItem";
 import { Item } from "@/model/news.model";
-import { LatestNews } from "@/service/news.api";
+import { LatestNews } from "@/service/store/news/news.api";
 import { useEffect, useState } from "react";
 
 interface IRightNews {
@@ -29,7 +29,7 @@ const RightNews = (prop: IRightNews) => {
     >
       {(size ? datas?.items?.slice(0, size) : datas?.items)?.map(
         (item: Item, index: number) => {
-          return <CardItem key={index} data={item} page={true} />;
+          return <CardItem key={index} data={item} page={false} />;
         }
       )}
     </div>

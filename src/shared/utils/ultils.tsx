@@ -4,7 +4,10 @@ import dayjs from "dayjs";
 import React, { ReactNode } from "react";
 import icon_zalo from "@/assets/img/icon_zalo.png";
 import Image from "next/image";
-import { getTheme } from "./theme/theme";
+import { useTheme } from "@/app/(provider)/ThemeProvider";
+import { KEYS_STORAGE } from "@/service/host";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
+import { Feed } from "@/model/rss";
 
 export const HeadingPage = ({
   icon,
@@ -16,7 +19,7 @@ export const HeadingPage = ({
   path?: string;
   breadcrumb?: BreadcrumbItemType[];
 }) => {
-  const themeData = getTheme();
+  const { themeData } = useTheme();
   return (
     <>
       {/*<div className={'mb-4'}>{breadcrumb && <Breadcrumb breadcrumb={breadcrumb} />}</div>*/}
@@ -35,7 +38,7 @@ export const HeadingPage = ({
 };
 
 export const DescriptionDateTime = ({ data }: { data: any }) => {
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
   return (
     <div
       className="flex items-center gap-1"
@@ -58,7 +61,7 @@ export const DescriptionTimeViewCount = ({
   data: any;
   margin?: string;
 }) => {
-  const themeData = getTheme();
+  const { themeData, setCurrentTheme } = useTheme();
   return (
     <div
       className={`text-[14px] ${
@@ -124,4 +127,60 @@ export const setDataStorage = (Key: string, value?: any): boolean => {
     console.log("Error saving data storage");
     return false;
   }
+};
+
+export const setDataCookie = (name: KEYS_STORAGE, value?: any): boolean => {
+  try {
+    if (value) {
+      setCookie(name, JSON.stringify(value));
+    } else {
+      deleteCookie(name);
+    }
+    return true;
+  } catch (error) {
+    console.log("Error saving cookie");
+    return false;
+  }
+};
+
+export const getDataCookie = (name: KEYS_STORAGE) => {
+  try {
+    const data = getCookie(name);
+    if (data) {
+      return JSON.parse(data);
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log("Error retrieving data cookie");
+  }
+};
+
+export const transformDataRss = (data: any): Feed => {
+  return {
+    items: data.item.map((item: any) => ({
+      title: item.title,
+      link: item.link,
+      pubDate: item.pubDate,
+      enclosure: {
+        type: item.enclosure ? item.enclosure.type : "image/jpeg",
+        length: item.enclosure ? item.enclosure.length : "1200",
+        url: item.enclosure ? item.enclosure.url : "",
+      },
+      content: item.description,
+      contentSnippet: item.description.replace(/<.*?>/g, ""), // remove HTML tags
+      guid: item.guid,
+      isoDate: new Date(item.pubDate).toISOString(),
+    })),
+    image: {
+      link: data.image.link,
+      url: data.image.url,
+      title: data.image.title,
+    },
+    title: data.title,
+    description: data.description,
+    pubDate: data.pubDate,
+    generator: data.generator,
+    link: data.link,
+  };
 };
