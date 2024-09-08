@@ -7,6 +7,9 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ThemeProvider } from "./(provider)/ThemeProvider";
 import { Providers } from "./(provider)/Provider";
 import { AuthProvider } from "./(provider)/AuthProvider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const inter = Inter({ subsets: ["latin"] });
 config.autoAddCss = false;
 
@@ -27,6 +30,7 @@ export default function RootLayout({
           <Providers>
             <AuthProvider>
               <ThemeProvider>{children}</ThemeProvider>
+              <ToastContainer />
             </AuthProvider>
           </Providers>
         </AntdRegistry>

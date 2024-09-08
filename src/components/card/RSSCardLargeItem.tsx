@@ -40,7 +40,10 @@ export default function CardLargeItem(props: CardLargeItem) {
                   transition: "all 0.3s ease-in-out",
                 }}
               >
-                <CustomImage src={data?.enclosure?.url || ""} rate={"16:9"} />
+                <CustomImage
+                  src={encodeURIComponent(data?.enclosure?.url) || ""}
+                  rate={"16:9"}
+                />
               </div>
             </div>
             <div className={`py-[12px] ${page && "px-[14px]"}`}>

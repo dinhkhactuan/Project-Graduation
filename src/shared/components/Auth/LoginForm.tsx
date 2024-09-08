@@ -6,23 +6,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginOAuth2 } from "@/service/store/auth/auth.api";
 import { RootState } from "@/service/store/reducers";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { setLoginMessageShown } from "@/service/store/auth/auth.reducer";
 
 const validationSchema = Yup.object().shape({
   userName: Yup.string().required("Please input your username!"),
   userPassword: Yup.string().required("Please input your password!"),
-  role: Yup.string().required("Please select a role!"),
+  roleId: Yup.string().required("Please select a role!"),
 });
 
 const initialValues = {
   userName: "",
   userPassword: "",
-  role: "admin",
+  roleId: "8",
 };
 
 const LoginForm: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { token, loginSuccess } = useSelector((state: RootState) => state.auth);
+  const { token, loginSuccess, hasShownLoginMessage } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const onSubmit = (
     values: typeof initialValues,
@@ -33,10 +37,12 @@ const LoginForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (token) {
+    if (token && loginSuccess && !hasShownLoginMessage) {
+      toast.success("Đăng nhập thành công");
+      dispatch(setLoginMessageShown());
       router.push("/cms/dashboard");
     }
-  }, [token]);
+  }, [token, loginSuccess, hasShownLoginMessage]);
 
   return (
     <div
@@ -76,14 +82,14 @@ const LoginForm: React.FC = () => {
             <Form>
               <div style={{ marginBottom: "15px" }}>
                 <label
-                  htmlFor="role"
+                  htmlFor="roleId"
                   style={{ display: "block", marginBottom: "5px" }}
                 >
                   Vai trò
                 </label>
                 <Field
                   as="select"
-                  name="role"
+                  name="roleId"
                   style={{
                     width: "100%",
                     padding: "8px",
@@ -91,15 +97,15 @@ const LoginForm: React.FC = () => {
                     borderRadius: "4px",
                   }}
                 >
-                  <option style={{ cursor: "pointer" }} value="admin">
+                  <option style={{ cursor: "pointer" }} value="8">
                     Admin
                   </option>
-                  <option style={{ cursor: "pointer" }} value="nhà quảng cáo">
+                  <option style={{ cursor: "pointer" }} value="10">
                     Nhà Quảng Cáo
                   </option>
                 </Field>
                 <ErrorMessage
-                  name="role"
+                  name="roleId"
                   component="div"
                   className="text-red-500"
                 />

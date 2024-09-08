@@ -5,39 +5,36 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import {
-  createUser,
-  getUsers,
-  updateUser,
-  deleteUser,
-  getUserInfo,
-} from "./user.api";
-import { IUser } from "@/model/user.model";
+  createRole,
+  deleteRole,
+  getRoles,
+  updateRole,
+} from "./role.api";
 import { RootState } from "../reducers";
 import { IResponse } from "@/shared/type/IResponse";
+import { IRole } from "@/model/role.model";
 
-interface IInitialUserState {
+interface IInitialRoleState {
   loading: boolean;
-  user: IUser | null;
-  updateStatusUser: boolean;
-  deleteStatusUser: boolean;
+  updateStatusRole: boolean;
+  deleteStatusRole: boolean;
   errorMessage: string | null;
 }
 
-const initialState: IInitialUserState = {
+const initialState: IInitialRoleState = {
   loading: false,
   errorMessage: null,
-  updateStatusUser: false,
-  user: null,
-  deleteStatusUser: false,
+  updateStatusRole: false,
+  deleteStatusRole: false,
 };
 
-const userAdapter = createEntityAdapter({
-  selectId: (user: IUser) => user.userId ?? ("defaultId" as EntityId),
+const roleAdapter = createEntityAdapter({
+  selectId: (role: IRole) => role.roleId ?? ("defaultId" as EntityId),
 });
 
 const { actions, reducer } = createSlice({
-  name: "userSlice",
-  initialState: userAdapter.getInitialState({ initialState }),
+  name: "roleSlice",
+  initialState: roleAdapter.getInitialState({ initialState }),
   reducers: {
     fetching(state) {
       state.initialState.loading = true;
@@ -45,28 +42,27 @@ const { actions, reducer } = createSlice({
 
     resetAll(state) {
       state.initialState.loading = false;
-      state.initialState.updateStatusUser = false;
-      state.initialState.deleteStatusUser = false;
-      state.initialState.user = null;
+      state.initialState.updateStatusRole = false;
+      state.initialState.deleteStatusRole = false;
       state.initialState.errorMessage = null;
     },
     resetEntity(state) {
-      state.initialState.updateStatusUser = false;
-      state.initialState.deleteStatusUser = false;
+      state.initialState.updateStatusRole = false;
+      state.initialState.deleteStatusRole = false;
       state.initialState.loading = false;
       state.initialState.errorMessage = null;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(
-      getUsers.fulfilled,
-      (state, { payload }: PayloadAction<IResponse<IUser[]>>) => {
-        userAdapter.setAll(state as any, payload.data);
+      getRoles.fulfilled,
+      (state, { payload }: PayloadAction<IResponse<IRole[]>>) => {
+        roleAdapter.setAll(state as any, payload.data);
         state.initialState.loading = false;
       }
     );
     builder.addCase(
-      getUsers.rejected,
+      getRoles.rejected,
       (state, { payload }: PayloadAction<any>) => {
         state.initialState.errorMessage =
           payload?.message || payload?.error || payload?.msg;
@@ -75,75 +71,59 @@ const { actions, reducer } = createSlice({
     );
 
     builder.addCase(
-      getUserInfo.fulfilled,
-      (state, { payload }: PayloadAction<IUser>) => {
-        state.initialState.user = payload;
-        state.initialState.loading = false;
-      }
-    );
-    builder.addCase(
-      getUserInfo.rejected,
-      (state, { payload }: PayloadAction<any>) => {
-        state.initialState.errorMessage =
-          payload?.message || payload?.error || payload?.msg;
-        state.initialState.loading = false;
-      }
-    );
-
-    builder.addCase(
-      createUser.fulfilled,
+      createRole.fulfilled,
       (state, { payload }: PayloadAction<IResponse<any>>) => {
         state.initialState.loading = false;
-        state.initialState.updateStatusUser = true;
+        state.initialState.updateStatusRole = true;
       }
     );
     builder.addCase(
-      createUser.rejected,
+      createRole.rejected,
       (state, { payload }: PayloadAction<any>) => {
         state.initialState.errorMessage =
           payload?.message || payload?.error || payload?.msg;
         state.initialState.loading = false;
-        state.initialState.updateStatusUser = false;
+        state.initialState.updateStatusRole = false;
       }
     );
     builder.addCase(
-      updateUser.fulfilled,
+      updateRole.fulfilled,
       (state, { payload }: PayloadAction<IResponse<any>>) => {
         state.initialState.loading = false;
-        state.initialState.updateStatusUser = true;
+        state.initialState.updateStatusRole = true;
       }
     );
     builder.addCase(
-      updateUser.rejected,
+      updateRole.rejected,
       (state, { payload }: PayloadAction<any>) => {
         state.initialState.errorMessage =
           payload?.message || payload?.error || payload?.msg;
         state.initialState.loading = false;
-        state.initialState.updateStatusUser = false;
+        state.initialState.updateStatusRole = false;
       }
     );
     builder.addCase(
-      deleteUser.fulfilled,
+      deleteRole.fulfilled,
       (state, { payload }: PayloadAction<IResponse<any>>) => {
         state.initialState.loading = false;
-        state.initialState.deleteStatusUser = true;
-        state.initialState.updateStatusUser = false;
+        state.initialState.deleteStatusRole = true;
+        state.initialState.updateStatusRole = false;
       }
     );
     builder.addCase(
-      deleteUser.rejected,
+      deleteRole.rejected,
       (state, { payload }: PayloadAction<any>) => {
         state.initialState.errorMessage =
           payload?.message || payload?.error || payload?.msg;
         state.initialState.loading = false;
-        state.initialState.updateStatusUser = false;
-        state.initialState.deleteStatusUser = false;
+        state.initialState.updateStatusRole = false;
+        state.initialState.deleteStatusRole = false;
       }
     );
   },
 });
 export const { fetching, resetAll, resetEntity } = actions;
-export const userSelectors = userAdapter.getSelectors<RootState>(
-  (state) => state.user
+export const roleSelectors = roleAdapter.getSelectors<RootState>(
+  (state) => state.role
 );
 export default reducer;

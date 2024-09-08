@@ -1,5 +1,5 @@
 import React from "react";
-import UserManagement from "./userManagement";
+import UserManagement from "./UserManagement";
 
 const User = () => {
   return (

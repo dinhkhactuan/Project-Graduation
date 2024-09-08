@@ -1,12 +1,12 @@
 "use client";
-import { RootState } from "@/service/store/reducers";
+import { KEYS_STORAGE } from "@/service/host";
+import { getDataCookie } from "@/shared/utils/ultils";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 
 const AuthProtected = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { token } = useSelector((state: RootState) => state.auth);
+  const token = getDataCookie(KEYS_STORAGE.USER_TOKEN);
 
   useEffect(() => {
     if (!token) {

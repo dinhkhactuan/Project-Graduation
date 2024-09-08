@@ -9,18 +9,6 @@ export interface ILoginForm {
   userPassword: string;
 }
 
-export const getUserInfo = createAsyncThunk(
-  `user-info`,
-  async (_, thunkAPI) => {
-    try {
-      const { data } = await axiosInstance.get(`admin/user/info`);
-      return data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
 export interface ILoginOAuth2Response {
   user_info: IUser;
   access_token: string;

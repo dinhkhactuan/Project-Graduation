@@ -1,5 +1,6 @@
 import axios from "axios";
 import { KEYS_STORAGE, SERVER_API_URL } from "../host";
+import { getDataCookie } from "@/shared/utils/ultils";
 
 const TIMEOUT = 1 * 60 * 1000;
 export const IS_SERVER = typeof window === "undefined";
@@ -13,9 +14,9 @@ const axiosInstance = axios.create({
 });
 
 const AxiosRequest = async (config: any) => {
-  let token = localStorage.getItem(
-    KEYS_STORAGE.USER_TOKEN || JSON.stringify(null)
-  );
+  let token =
+    localStorage.getItem(KEYS_STORAGE.USER_TOKEN || JSON.stringify(null)) ||
+    getDataCookie(KEYS_STORAGE.USER_TOKEN);
   if (IS_SERVER) {
     const { cookies } = await import("next/headers");
     token = JSON.parse(
