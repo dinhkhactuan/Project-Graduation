@@ -64,7 +64,7 @@ const CustomImage = ({
             className="relative overflow-hidden"
           >
             <Image
-              src={src}
+              src={`/api/proxy-image?url=${encodeURIComponent(src)}`}
               alt=""
               onClick={(e) => {
                 onClick && onClick(e);
