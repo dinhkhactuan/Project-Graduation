@@ -1,16 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
 import {
   DashboardOutlined,
   UserOutlined,
-  FileOutlined,
   ShoppingCartOutlined,
+  SafetyCertificateOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import AvatarContainer from "../components/avata/Avata";
+import { useSelector } from "react-redux";
+import { RootState } from "@/service/store/reducers";
 
 const { Sider } = Layout;
 
@@ -21,18 +23,54 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   const pathname = usePathname();
   const router = useRouter();
+  const [userRole, setUserRole] = useState<string>("");
+
+  // Assuming you have a user state in your Redux store
+  const { user } = useSelector((state: RootState) => state.user.initialState);
+
+  useEffect(() => {
+    // Set the user role when the component mounts or when the user changes
+    if (user && user.roleEntity) {
+      setUserRole(user.roleEntity.roleCode.toLowerCase());
+    }
+  }, [user]);
 
   const menuItems = [
-    { key: "/cms/dashboard", icon: <DashboardOutlined />, label: "Dashboard" },
-    { key: "/cms/userManagement", icon: <UserOutlined />, label: "Users" },
+    {
+      key: "/cms/dashboard",
+      icon: <DashboardOutlined />,
+      label: "Dashboard",
+      roles: ["admin"],
+    },
+    {
+      key: "/cms/userManagement",
+      icon: <UserOutlined />,
+      label: "Users",
+      roles: ["admin"],
+    },
     {
       key: "/cms/adverManagement",
       icon: <ShoppingCartOutlined />,
       label: "Advertisement",
+      roles: ["admin", "user"],
     },
-    { key: "/reports", icon: <FileOutlined />, label: "Reports" },
-    { key: "/cms/settings", icon: <SettingOutlined />, label: "Settings" },
+    {
+      key: "/cms/role",
+      icon: <SafetyCertificateOutlined />,
+      label: "Roles",
+      roles: ["admin"],
+    },
+    {
+      key: "/cms/settings",
+      icon: <SettingOutlined />,
+      label: "Settings",
+      roles: ["admin"],
+    },
   ];
+
+  const filteredMenuItems = menuItems.filter(
+    (item) => item.roles.includes(userRole) || userRole === "admin"
+  );
 
   const handleMenuClick = (key: string) => {
     router.push(key);
@@ -45,7 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         theme="dark"
         mode="inline"
         selectedKeys={[pathname]}
-        items={menuItems}
+        items={filteredMenuItems}
         onClick={({ key }) => handleMenuClick(key as string)}
       />
     </Sider>

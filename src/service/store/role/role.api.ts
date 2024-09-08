@@ -1,9 +1,9 @@
 import axiosInstance from "@/service/config/axios-interceptor";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const prefix = "/user";
+const prefix = "/role";
 
-export const getUsers = createAsyncThunk(`list-user`, async (_, thunkAPI) => {
+export const getRoles = createAsyncThunk(`list-role`, async (_, thunkAPI) => {
   try {
     const { data } = await axiosInstance.get(`${prefix}`);
     return data;
@@ -12,7 +12,7 @@ export const getUsers = createAsyncThunk(`list-user`, async (_, thunkAPI) => {
   }
 });
 
-export const getUser = createAsyncThunk(`get-user`, async (id, thunkAPI) => {
+export const getRole = createAsyncThunk(`get-role`, async (id, thunkAPI) => {
   try {
     const { data } = await axiosInstance.get(`${prefix}/${id}`);
     return data;
@@ -21,20 +21,8 @@ export const getUser = createAsyncThunk(`get-user`, async (id, thunkAPI) => {
   }
 });
 
-export const getUserInfo = createAsyncThunk(
-  `get-user-info`,
-  async (_, thunkAPI) => {
-    try {
-      const { data } = await axiosInstance.get(`auth/info`);
-      return data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const createUser = createAsyncThunk(
-  `createUser-user`,
+export const createRole = createAsyncThunk(
+  `createUser-role`,
   async (body: any, thunkAPI) => {
     try {
       const { data } = await axiosInstance.post(`${prefix}`, body);
@@ -45,8 +33,8 @@ export const createUser = createAsyncThunk(
   }
 );
 
-export const updateUser = createAsyncThunk(
-  `update-user`,
+export const updateRole = createAsyncThunk(
+  `update-role`,
   async (body: any, thunkAPI) => {
     try {
       const { data } = await axiosInstance.put(`${prefix}`, body);
@@ -57,8 +45,8 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-export const deleteUser = createAsyncThunk(
-  `delete-user`,
+export const deleteRole = createAsyncThunk(
+  `delete-role`,
   async (id: Number, thunkAPI) => {
     try {
       const { data } = await axiosInstance.delete(`${prefix}/${id}`);

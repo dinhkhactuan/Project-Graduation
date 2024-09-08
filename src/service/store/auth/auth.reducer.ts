@@ -9,6 +9,7 @@ interface IInitialAuthState {
   token: string | null;
   loginSuccess: boolean;
   logoutSuccess: boolean;
+  hasShownLoginMessage: boolean;
 }
 
 const initialState: IInitialAuthState = {
@@ -17,6 +18,7 @@ const initialState: IInitialAuthState = {
   token: null,
   loginSuccess: false,
   logoutSuccess: false,
+  hasShownLoginMessage: false,
 };
 
 const { actions, reducer } = createSlice({
@@ -43,6 +45,9 @@ const { actions, reducer } = createSlice({
       state.loading = false;
       state.errorMessage = null;
     },
+    setLoginMessageShown: (state) => {
+      state.hasShownLoginMessage = true;
+    },
     setToken(state, { payload }: PayloadAction<string>) {
       setDataCookie(KEYS_STORAGE.USER_TOKEN, payload);
       state.token = payload;
@@ -53,7 +58,7 @@ const { actions, reducer } = createSlice({
       loginOAuth2.fulfilled,
       (state, { payload }: PayloadAction<ILoginOAuth2Response | any>) => {
         setDataCookie(KEYS_STORAGE.USER_TOKEN, payload.token);
-        state.token = payload.access_token;
+        state.token = payload.token;
         state.loginSuccess = true;
         state.loading = false;
       }
@@ -102,5 +107,12 @@ const { actions, reducer } = createSlice({
     );
   },
 });
-export const { fetching, resetAll, resetEntity, logout, setToken } = actions;
+export const {
+  fetching,
+  resetAll,
+  resetEntity,
+  logout,
+  setToken,
+  setLoginMessageShown,
+} = actions;
 export default reducer;

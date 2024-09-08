@@ -3,5 +3,5 @@ export interface INewRole {
   description: string;
 }
 export interface IRole extends INewRole {
-  id: string;
+  roleId: string;
 }

@@ -62,7 +62,7 @@ export default function CardItem(props: CardItemProps) {
             }}
           >
             <CustomImage
-              src={data?.enclosure?.url || ""}
+              src={encodeURIComponent(data?.enclosure?.url) || ""}
               rate={vertical ? "16:9" : "4:3"}
             />
           </div>

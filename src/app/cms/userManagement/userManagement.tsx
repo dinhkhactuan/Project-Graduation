@@ -1,25 +1,77 @@
 "use client";
-import React from "react";
-import { Table, Button, Space, Modal, Form, Input } from "antd";
+import React, { useEffect } from "react";
+import { Table, Button, Space, Modal, Form, Input, Radio } from "antd";
 import {
   UserOutlined,
   MailOutlined,
-  SafetyCertificateOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+} from "@/service/store/user/user.api";
+import { resetEntity, userSelectors } from "@/service/store/user/user.reducers";
+import { IUser } from "@/model/user.model";
+import { RootState } from "@/service/store/reducers";
+import { toast } from "react-toastify";
+import { getRoles } from "@/service/store/role/role.api";
+import { roleSelectors } from "@/service/store/role/role.reducer";
 
 const UserManagement: React.FC = () => {
-  const users = [
-    { id: 1, name: "John Doe", email: "john@example.com", role: "Admin" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User" },
-  ];
-
+  const dispatch = useDispatch();
+  const roles = useSelector(roleSelectors.selectAll);
+  const users = useSelector(userSelectors.selectAll);
+  const { updateStatusUser, deleteStatusUser } = useSelector(
+    (state: RootState) => state.user.initialState
+  );
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [editingUser, setEditingUser] = React.useState<any>(null);
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    dispatch(getUsers() as any);
+    dispatch(getRoles() as any);
+  }, []);
+
+  useEffect(() => {
+    if (updateStatusUser) {
+      toast.success(
+        `${
+          editingUser
+            ? "Cập nhật tài khoản thành công"
+            : "Tạo mới tài khoản thành công"
+        }`
+      );
+      dispatch(getUsers() as any);
+      dispatch(resetEntity());
+      return;
+    }
+    if (deleteStatusUser) {
+      toast.success(`Xóa tài khoản thành công`);
+      dispatch(getUsers() as any);
+      dispatch(resetEntity());
+    }
+  }, [updateStatusUser, deleteStatusUser]);
+
   const showModal = (user: any = null) => {
     setEditingUser(user);
-    form.setFieldsValue(user || { name: "", email: "", role: "" });
+    form.setFieldsValue(
+      user
+        ? { ...user, roleId: user.roleEntity.roleId, password: "" }
+        : {
+            userName: "",
+            email: "",
+            phoneNumber: "",
+            address: "",
+            userPassword: "",
+            roleId: roles.find(
+              (role) => role.roleCode.toLowerCase() === "admin"
+            )?.roleId,
+          }
+    );
     setIsModalVisible(true);
   };
 
@@ -27,8 +79,17 @@ const UserManagement: React.FC = () => {
     form
       .validateFields()
       .then((values) => {
-        console.log("Form values:", values);
         setIsModalVisible(false);
+        if (editingUser) {
+          const updateData = values.password
+            ? values
+            : { ...values, password: undefined };
+          dispatch(
+            updateUser({ ...updateData, userId: editingUser.userId }) as any
+          );
+        } else {
+          dispatch(createUser(values) as any);
+        }
       })
       .catch((info) => {
         console.log("Validate Failed:", info);
@@ -40,19 +101,34 @@ const UserManagement: React.FC = () => {
   };
 
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
-    { title: "Name", dataIndex: "name", key: "name" },
+    { title: "ID", dataIndex: "userId", key: "userId" },
+    { title: "Name", dataIndex: "userName", key: "userName" },
     { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Role", dataIndex: "role", key: "role" },
+    { title: "Phone", dataIndex: "phoneNumber", key: "phoneNumber" },
+    { title: "Address", dataIndex: "address", key: "address" },
+    {
+      title: "Role",
+      dataIndex: ["roleEntity", "roleCode"],
+      key: "role",
+      render: (roleCode: string) => roleCode?.toUpperCase(),
+    },
     {
       title: "Action",
       key: "action",
-      render: (text: any, record: any) => (
+      render: (text: any, record: IUser) => (
         <Space size="middle">
           <Button type="link" onClick={() => showModal(record)}>
             Edit
           </Button>
-          <Button type="link" danger>
+          <Button
+            type="link"
+            danger
+            onClick={() => {
+              if (window.confirm("Bạn có chắc chắn muốn xóa")) {
+                dispatch(deleteUser(Number(record.userId)) as any);
+              }
+            }}
+          >
             Delete
           </Button>
         </Space>
@@ -69,11 +145,10 @@ const UserManagement: React.FC = () => {
       >
         Add User
       </Button>
-      <Table columns={columns} dataSource={users} rowKey="id" />
-
+      <Table columns={columns} dataSource={users} rowKey="userId" />
       <Modal
         title={editingUser ? "Edit User" : "Add User"}
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
@@ -87,9 +162,9 @@ const UserManagement: React.FC = () => {
       >
         <Form form={form} layout="vertical" name="user_form">
           <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: "Please input the name!" }]}
+            name="userName"
+            label="User Name"
+            rules={[{ required: true, message: "Please input the user name!" }]}
           >
             <Input prefix={<UserOutlined />} />
           </Form.Item>
@@ -107,11 +182,46 @@ const UserManagement: React.FC = () => {
             <Input prefix={<MailOutlined />} />
           </Form.Item>
           <Form.Item
-            name="role"
-            label="Role"
-            rules={[{ required: true, message: "Please input the role!" }]}
+            name="userPassword"
+            label="Password"
+            rules={[
+              { required: !editingUser, message: "Please input the password!" },
+              {
+                min: 6,
+                message: "Password must be at least 6 characters long",
+              },
+            ]}
           >
-            <Input prefix={<SafetyCertificateOutlined />} />
+            <Input.Password prefix={<LockOutlined />} />
+          </Form.Item>
+          <Form.Item
+            name="phoneNumber"
+            label="Phone Number"
+            rules={[
+              { required: true, message: "Please input the phone number!" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="address"
+            label="Address"
+            rules={[{ required: true, message: "Please input the address!" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="roleId"
+            label="Role"
+            rules={[{ required: true, message: "Please select a role!" }]}
+          >
+            <Radio.Group>
+              {roles.map((role) => (
+                <Radio key={role.roleId} value={role.roleId}>
+                  {role.roleCode.toUpperCase()}
+                </Radio>
+              ))}
+            </Radio.Group>
           </Form.Item>
         </Form>
       </Modal>
