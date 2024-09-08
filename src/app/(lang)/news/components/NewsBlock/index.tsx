@@ -16,7 +16,7 @@ export default function MostReadNews(props: MostReadNewsProps) {
   const [dataList, setDataList] = useState<any>([]);
   useEffect(() => {
     const getData = async () => {
-      const data = await LatestNews(url);
+      const data = await LatestNews();
 
       setDataList(data?.items);
     };

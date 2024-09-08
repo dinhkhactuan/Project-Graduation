@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Row, Col, Typography } from "antd";
-import { LatestNews } from "@/service/store/news/news.api";
 import { TypePage } from "@/service/TypePage";
 import CardItem from "@/components/card/RSSCardItem";
 import MostReadNews from "../components/NewsBlock";

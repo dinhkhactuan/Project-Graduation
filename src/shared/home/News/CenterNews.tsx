@@ -1,8 +1,6 @@
 "use client";
 import CardLargeItem from "@/components/card/RSSCardLargeItem";
 import { Item } from "@/model/news.model";
-import { LatestNews } from "@/service/store/news/news.api";
-import { useEffect, useState } from "react";
 
 interface ICenterNews {
   datas: any;
