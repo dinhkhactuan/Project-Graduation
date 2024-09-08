@@ -46,15 +46,6 @@ export default function NewsEvent({ data, type, lang, url }: NewsEventProps) {
     [TypePage.LATEST_NEWS]: "Tin mới nhất",
   };
 
-  useEffect(() => {
-    const getData = async () => {
-      const result = await LatestNews(url);
-      setDataList(result);
-      // setTotalElements(result.totalElements);
-    };
-    getData();
-  }, [url]);
-
   return (
     <div className="container news-event-layout mt-2">
       <div>

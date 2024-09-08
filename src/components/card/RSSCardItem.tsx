@@ -15,35 +15,35 @@ type CardItemProps = {
   page?: boolean;
 };
 
-export default function CardItem(props: CardItemProps) {
-  const {
-    data,
-    className = "p-0",
-    page = false,
-    horizontalLines = true,
-    vertical,
-    formCard,
-  } = props;
+const CardItem: React.FC<CardItemProps> = ({
+  data,
+  className = "p-0",
+  page = false,
+  horizontalLines = true,
+  vertical,
+  formCard,
+}) => {
   const { themeData } = useTheme();
 
+  const getFlexDirection = () => {
+    if (formCard === FormCardItem.COL_REVERSE) return "flex-col-reverse";
+    if (formCard === FormCardItem.ROW_REVERSE) return "flex-row-reverse";
+    return vertical
+      ? "flex-col"
+      : "flex-col sm:flex-col md:flex-row lg:flex-row";
+  };
+
   return (
-    <Link href={data.guid} target="_blank">
+    <Link href={data.link || data.guid} target="_blank">
       <div
         style={{ borderBottom: `${horizontalLines ? "1px solid #eee" : ""}` }}
-        className={`card-item flex ${
-          vertical
-            ? "flex-col "
-            : "flex-col sm:flex-col md:flex-row lg:flex-row mb-[12px]"
-        } ${formCard === FormCardItem.COL_REVERSE && "flex-col-reverse"} 
-      ${
-        formCard === FormCardItem.ROW_REVERSE && "flex-row-reverse"
-      }items-start justify-center gap-3 cursor-pointer ${className}`}
+        className={`card-item flex ${getFlexDirection()} items-start justify-center gap-3 cursor-pointer mb-[12px] ${className}`}
       >
         <div
-          className={`w-full  h-full shrink-0 ${
+          className={`w-full h-full shrink-0 ${
             !vertical
-              ? "md:w-[120px] xl:w-[100px] w-full  h-full"
-              : "w-full  h-full"
+              ? "md:w-[120px] xl:w-[100px] w-full h-full"
+              : "w-full h-full"
           } ${
             page ? "md:w-[190px] xl:w-[190px]" : "md:w-[120px] xl:w-[100px]"
           }`}
@@ -74,24 +74,18 @@ export default function CardItem(props: CardItemProps) {
           >
             {data?.title || ""}
           </div>
-          {formCard === FormCardItem.NO_DATE ? (
-            <></>
-          ) : (
-            <div
-              className={
-                "text-[14px] font-semibold flex items-center justify-between font-quicksand-semibold"
-              }
-            >
+          {formCard !== FormCardItem.NO_DATE && (
+            <div className="text-[14px] font-semibold flex items-center justify-between font-quicksand-semibold">
               <DescriptionTimeViewCount data={data?.isoDate} />
             </div>
           )}
-          <span
-            className={`text-[14px] text-ellipsis overflow-hidden md:line-clamp-3 font-quicksand-medium `}
-          >
+          <span className="text-[14px] text-ellipsis overflow-hidden md:line-clamp-3 font-quicksand-medium">
             {data?.contentSnippet || ""}
           </span>
         </div>
       </div>
     </Link>
   );
-}
+};
+
+export default CardItem;

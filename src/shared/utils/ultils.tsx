@@ -160,8 +160,8 @@ export const transformDataRss = (data: any): Feed => {
   return {
     items: data.item.map((item: any) => ({
       title: item.title,
-      link: item.link,
-      pubDate: item.pubDate,
+      link: item?.link,
+      pubDate: item?.pubDate,
       enclosure: {
         type: item.enclosure ? item.enclosure.type : "image/jpeg",
         length: item.enclosure ? item.enclosure.length : "1200",
@@ -173,9 +173,9 @@ export const transformDataRss = (data: any): Feed => {
       isoDate: new Date(item.pubDate).toISOString(),
     })),
     image: {
-      link: data.image.link,
-      url: data.image.url,
-      title: data.image.title,
+      link: data.image?.link,
+      url: data.image?.url,
+      title: data.image?.title,
     },
     title: data.title,
     description: data.description,
@@ -183,4 +183,31 @@ export const transformDataRss = (data: any): Feed => {
     generator: data.generator,
     link: data.link,
   };
+};
+
+export const processRSSData = (rssSources: any) => {
+  const allArticles = rssSources?.flatMap((source: any) =>
+    source.items.map((item: any) => ({
+      ...item,
+      sourceTitle: source.title,
+      pubDate: new Date(item.pubDate),
+    }))
+  );
+
+  allArticles?.sort((a: any, b: any) => b.pubDate - a.pubDate);
+
+  const uniqueArticles = allArticles?.reduce((acc: any, current: any) => {
+    const x = acc?.find((item: any) => item.title === current.title);
+    if (!x) {
+      return acc.concat([current]);
+    } else {
+      return acc;
+    }
+  }, []);
+
+  return uniqueArticles;
+};
+
+export const getArticleSegment = (articles: any, start: any, end: any) => {
+  return articles.slice(start, end);
 };
