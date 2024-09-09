@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Layout, Menu, MenuProps, Tooltip } from "antd";
 import Image from "next/image";
-import Search, { SearchProps } from "antd/es/input/Search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloud, faGear } from "@fortawesome/free-solid-svg-icons";
 import SettingHome from "../components/SettingHome";

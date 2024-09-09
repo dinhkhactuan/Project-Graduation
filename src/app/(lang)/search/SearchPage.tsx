@@ -60,7 +60,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Kết quả tìm kiếm: "{query}"</h2>
+      {/* <h2 className="text-2xl font-bold mb-4">Kết quả tìm kiếm: "{query}"</h2> */}
       <p style={{ fontSize: "14px", fontWeight: 500 }} className="mb-4">
         {filteredNews.length > 0
           ? `Đã tìm thấy ${filteredNews.length} tin tức`
@@ -83,7 +83,8 @@ const SearchPage: React.FC = () => {
           />
         </>
       ) : (
-        <p>Không tìm thấy kết quả nào cho "{query}"</p>
+        // <p>Không tìm thấy kết quả nào cho "{query}"</p>
+        <></>
       )}
     </div>
   );
