@@ -11,6 +11,7 @@ import { useMenuItems } from "./itemsMenu.model";
 import Link from "next/link";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@/app//(provider)/ThemeProvider";
+import SearchHome from "./SearchHome";
 
 const { Header } = Layout;
 
@@ -24,8 +25,6 @@ const HeaderHome = () => {
   const onClick: MenuProps["onClick"] = (e) => {
     setCurrent(e.key);
   };
-  const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
-    console.log(info?.source, value);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -78,13 +77,8 @@ const HeaderHome = () => {
               </div>
             </div>
           </div>
-          <Search
-            className="!w-2/5"
-            placeholder="input search text"
-            onSearch={onSearch}
-            size="large"
-            enterButton
-          />
+          <SearchHome className="!w-2/5" />
+
           <div>
             <Tooltip title={"Cài đặt"} className="mr-[14px]">
               <FontAwesomeIcon icon={faGear} size="xl" onClick={showModal} />

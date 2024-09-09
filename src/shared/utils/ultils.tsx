@@ -209,5 +209,5 @@ export const processRSSData = (rssSources: any) => {
 };
 
 export const getArticleSegment = (articles: any, start: any, end: any) => {
-  return articles.slice(start, end);
+  return articles?.slice(start, end);
 };
