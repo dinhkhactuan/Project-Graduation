@@ -7,12 +7,7 @@ const PageNews = async () => {
 
   return (
     <>
-      <NewsEvent
-        data={rawResult?.items}
-        lang="vi"
-        url="tam-su.rss"
-        type={TypePage.CONFIDE}
-      />
+      <NewsEvent lang="vi" type={TypePage.CONFIDE} />
     </>
   );
 };

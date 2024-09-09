@@ -16,38 +16,17 @@ export function useMenuItems(): MenuItem[] {
       },
     },
     {
-      label: "Góc nhìn",
-      key: "2",
-    },
-    {
       label: "Thế giới",
       key: "3",
       onClick: () => {
         router.push("/world");
       },
-      children: [
-        {
-          label: "Option 4",
-          key: "children1",
-        },
-        {
-          label: "Item 2",
-          key: "children2",
-        },
-      ],
     },
     {
       key: "4",
       label: "Kinh doanh",
       onClick: () => {
         router.push("/business");
-      },
-    },
-    {
-      key: "5",
-      label: "Start up",
-      onClick: () => {
-        router.push("/start-up");
       },
     },
     {
@@ -72,18 +51,10 @@ export function useMenuItems(): MenuItem[] {
       },
     },
     {
-      key: "9",
-      label: "Tin nổi bật",
-    },
-    {
-      key: "10",
-      label: "Tin xem nhiều",
-    },
-    {
       key: "11",
       label: "Du lịch",
       onClick: () => {
-        router.push("/toursm");
+        router.push("/tourism");
       },
     },
 

@@ -38,7 +38,6 @@ export async function handleRSS(sources: Record<string, string>) {
         return data;
       })
     );
-    console.log(responses);
 
     return NextResponse.json({ data: responses });
   } catch (error) {

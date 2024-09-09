@@ -7,12 +7,7 @@ const PageNews = async () => {
 
   return (
     <>
-      <NewsEvent
-        data={rawResult?.items}
-        lang="vi"
-        url="kinh-doanh.rss"
-        type={TypePage.BUSINESS}
-      />
+      <NewsEvent lang="vi" type={TypePage.BUSINESS} />
     </>
   );
 };

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Layout, Menu, MenuProps, Tooltip } from "antd";
-import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloud, faGear } from "@fortawesome/free-solid-svg-icons";
 import SettingHome from "../components/SettingHome";
@@ -11,6 +10,7 @@ import Link from "next/link";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@/app//(provider)/ThemeProvider";
 import SearchHome from "./SearchHome";
+import Logo from "./Logo";
 
 const { Header } = Layout;
 
@@ -55,12 +55,7 @@ const HeaderHome = () => {
           <div className="flex items-center gap-4">
             <div>
               <Link href={"/"}>
-                <Image
-                  width={150}
-                  height={150}
-                  src="https://cdnweb.dantri.com.vn/dist/static-logo.1-0-1.742f36bc45f3443d0e59.svg"
-                  alt=""
-                />
+                <Logo />
               </Link>
             </div>
             <div className="flex items-center gap-3">
