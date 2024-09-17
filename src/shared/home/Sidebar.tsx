@@ -49,6 +49,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       roles: ["admin"],
     },
     {
+      key: "/cms/advertisingField",
+      icon: <ShoppingCartOutlined />,
+      label: "Advertising field",
+      roles: ["admin", "user"],
+    },
+    {
       key: "/cms/adverManagement",
       icon: <ShoppingCartOutlined />,
       label: "Advertisement",

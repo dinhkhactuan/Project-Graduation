@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   Button,
@@ -13,75 +12,82 @@ import {
   Statistic,
   Row,
   Col,
+  InputNumber,
+  DatePicker,
 } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAdvertiments,
+  createAdvertiment,
+  updateAdvertiment,
+  deleteAdvertiment,
+} from "@/service/store/advertiment/advertiment.api";
+import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
+import { IAdvertisement, Status } from "@/model/advertisement.model";
+import dayjs from "dayjs";
 
 const { Option } = Select;
-
-interface Ad {
-  id: number;
-  name: string;
-  type: string;
-  placement: string;
-  startDate: string;
-  endDate: string;
-  status: string;
-}
-
-const initialAds: Ad[] = [
-  {
-    id: 1,
-    name: "Summer Sale Banner",
-    type: "Banner",
-    placement: "Homepage",
-    startDate: "2023-06-01",
-    endDate: "2023-08-31",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "New Product Pop-up",
-    type: "Pop-up",
-    placement: "Product Page",
-    startDate: "2023-07-15",
-    endDate: "2023-09-15",
-    status: "Scheduled",
-  },
-  {
-    id: 3,
-    name: "Holiday Discount",
-    type: "Sidebar",
-    placement: "All Pages",
-    startDate: "2023-12-01",
-    endDate: "2023-12-31",
-    status: "Draft",
-  },
-];
+const { RangePicker } = DatePicker;
 
 const AdManagement: React.FC = () => {
-  const [ads, setAds] = useState<Ad[]>(initialAds);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const ads = useSelector(advertisementSelectors.selectAll);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [form] = Form.useForm();
-  const [editingAdId, setEditingAdId] = useState<number | null>(null);
+  const [editingAdId, setEditingAdId] = React.useState<number | null>(null);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAdvertiments() as any);
+  }, [dispatch]);
 
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Type", dataIndex: "type", key: "type" },
-    { title: "Placement", dataIndex: "placement", key: "placement" },
-    { title: "Start Date", dataIndex: "startDate", key: "startDate" },
-    { title: "End Date", dataIndex: "endDate", key: "endDate" },
+    { title: "Name", dataIndex: "advertisementName", key: "advertisementName" },
+    { title: "Link", dataIndex: "advertisementLink", key: "advertisementLink" },
+    {
+      title: "Position",
+      dataIndex: "advertisementPosition",
+      key: "advertisementPosition",
+    },
+    {
+      title: "Start Date",
+      dataIndex: "startTime",
+      key: "startTime",
+      render: (text: string) => dayjs(text).format("YYYY-MM-DD"),
+    },
+    {
+      title: "End Date",
+      dataIndex: "endTime",
+      key: "endTime",
+      render: (text: string) => dayjs(text).format("YYYY-MM-DD"),
+    },
+    { title: "Price", dataIndex: "price", key: "price" },
     { title: "Status", dataIndex: "status", key: "status" },
+    {
+      title: "Fields",
+      dataIndex: "advertisingFields",
+      key: "advertisingFields",
+      render: (
+        fields: { advertisingFieldId: number; advertisingFieldName: string }[]
+      ) => fields.map((field) => field.advertisingFieldName).join(", "),
+    },
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: Ad) => (
+      render: (_: any, record: IAdvertisement) => (
         <Space size="middle">
           <Button icon={<EditOutlined />} onClick={() => handleEdit(record)}>
             Edit
           </Button>
           <Button
+            icon={<EditOutlined />}
+            onClick={() => handleSendApproval(record)}
+          >
+            Submit approval
+          </Button>
+          <Button
             icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
+            onClick={() => handleDelete(record.advertisementId)}
             danger
           >
             Delete
@@ -97,30 +103,57 @@ const AdManagement: React.FC = () => {
     setIsModalVisible(true);
   };
 
-  const handleEdit = (record: Ad) => {
-    setEditingAdId(record.id);
-    form.setFieldsValue(record);
+  const handleEdit = (record: IAdvertisement) => {
+    setEditingAdId(record.advertisementId);
+    form.setFieldsValue({
+      ...record,
+      timeRange: [dayjs(record.startTime), dayjs(record.endTime)],
+      advertisingFields: record.advertisingFields.map(
+        (field) => field.advertisingFieldId
+      ),
+    });
+    setIsModalVisible(true);
+  };
+
+  const handleSendApproval = (record: IAdvertisement) => {
+    setEditingAdId(record.advertisementId);
+    form.setFieldsValue({
+      ...record,
+      timeRange: [dayjs(record.startTime), dayjs(record.endTime)],
+      advertisingFields: record.advertisingFields.map(
+        (field) => field.advertisingFieldId
+      ),
+    });
     setIsModalVisible(true);
   };
 
   const handleDelete = (id: number) => {
-    setAds(ads.filter((ad) => ad.id !== id));
+    dispatch(deleteAdvertiment(id) as any);
   };
 
   const handleModalOk = () => {
     form.validateFields().then((values) => {
+      const [startTime, endTime] = values.timeRange;
+      const newAd: IAdvertisement = {
+        ...values,
+        startTime: startTime.format("YYYY-MM-DD"),
+        endTime: endTime.format("YYYY-MM-DD"),
+        status: Status.PENDING,
+        advertisementId:
+          editingAdId ||
+          Math.max(...ads.map((ad) => ad.advertisementId), 0) + 1,
+        advertisingFields: values.advertisingFields.map((id: number) => {
+          return {
+            advertisingFieldId: id,
+            advertisingFieldName: id === 1 ? "Dien tu" : "Co khi",
+          };
+        }),
+      };
+
       if (editingAdId === null) {
-        // Add new ad
-        const newAd = {
-          ...values,
-          id: Math.max(...ads.map((ad) => ad.id)) + 1,
-        };
-        setAds([...ads, newAd]);
+        dispatch(createAdvertiment(newAd) as any);
       } else {
-        // Update existing ad
-        setAds(
-          ads.map((ad) => (ad.id === editingAdId ? { ...ad, ...values } : ad))
-        );
+        dispatch(updateAdvertiment(newAd) as any);
       }
       setIsModalVisible(false);
     });
@@ -128,35 +161,26 @@ const AdManagement: React.FC = () => {
 
   return (
     <div style={{ padding: "24px" }}>
-      <h1>Ad Management</h1>
-
       <Row gutter={16} style={{ marginBottom: "24px" }}>
-        <Col span={6}>
+        <Col span={8}>
           <Card>
             <Statistic title="Total Ads" value={ads.length} />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Card>
             <Statistic
-              title="Active Ads"
-              value={ads.filter((ad) => ad.status === "Active").length}
+              title="Pending Ads"
+              value={ads.filter((ad) => ad.status === Status.PENDING).length}
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Card>
             <Statistic
-              title="Scheduled Ads"
-              value={ads.filter((ad) => ad.status === "Scheduled").length}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Draft Ads"
-              value={ads.filter((ad) => ad.status === "Draft").length}
+              title="Total Revenue"
+              value={ads.reduce((sum, ad) => sum + ad.price, 0)}
+              prefix="$"
             />
           </Card>
         </Col>
@@ -171,51 +195,58 @@ const AdManagement: React.FC = () => {
         Add New Ad
       </Button>
 
-      <Table columns={columns} dataSource={ads} />
+      <Table columns={columns} dataSource={ads} rowKey="advertisementId" />
 
       <Modal
         title={editingAdId === null ? "Add New Ad" : "Edit Ad"}
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleModalOk}
         onCancel={() => setIsModalVisible(false)}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+          <Form.Item
+            name="advertisementName"
+            label="Name"
+            rules={[{ required: true }]}
+          >
             <Input />
           </Form.Item>
-          <Form.Item name="type" label="Type" rules={[{ required: true }]}>
+          <Form.Item
+            name="advertisementLink"
+            label="Link"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="advertisementPosition"
+            label="Position"
+            rules={[{ required: true }]}
+          >
             <Select>
-              <Option value="Banner">Banner</Option>
-              <Option value="Pop-up">Pop-up</Option>
-              <Option value="Sidebar">Sidebar</Option>
+              <Option value="center">Center</Option>
+              <Option value="sidebar">Sidebar</Option>
+              <Option value="footer">Footer</Option>
             </Select>
           </Form.Item>
           <Form.Item
-            name="placement"
-            label="Placement"
+            name="timeRange"
+            label="Time Range"
             rules={[{ required: true }]}
           >
-            <Input />
+            <RangePicker />
+          </Form.Item>
+          <Form.Item name="price" label="Price" rules={[{ required: true }]}>
+            <InputNumber min={0} prefix="$" />
           </Form.Item>
           <Form.Item
-            name="startDate"
-            label="Start Date"
+            name="advertisingFields"
+            label="Advertising Fields"
             rules={[{ required: true }]}
           >
-            <Input type="date" />
-          </Form.Item>
-          <Form.Item
-            name="endDate"
-            label="End Date"
-            rules={[{ required: true }]}
-          >
-            <Input type="date" />
-          </Form.Item>
-          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-            <Select>
-              <Option value="Active">Active</Option>
-              <Option value="Scheduled">Scheduled</Option>
-              <Option value="Draft">Draft</Option>
+            <Select mode="multiple">
+              <Option value={1}>Dien tu</Option>
+              <Option value={3}>Co khi</Option>
             </Select>
           </Form.Item>
         </Form>

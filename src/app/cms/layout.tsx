@@ -7,6 +7,9 @@ import AuthProtected from "../(provider)/AuthProtected";
 import AvatarContainer from "@/shared/components/avata/Avata";
 import { useDispatch } from "react-redux";
 import { getUserInfo } from "@/service/store/user/user.api";
+import { useMenuItems } from "@/shared/home/itemsMenu.model";
+import Link from "next/link";
+import Logo from "@/shared/home/Logo";
 
 const { Header, Content } = Layout;
 
@@ -16,10 +19,13 @@ interface LayoutCmsProps {
 
 const LayoutCms: React.FC<LayoutCmsProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const menuItems = useMenuItems();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserInfo() as any);
   }, []);
+  console.log(menuItems);
+
   return (
     <AuthProtected>
       <Layout style={{ minHeight: "100vh" }}>
@@ -36,6 +42,18 @@ const LayoutCms: React.FC<LayoutCmsProps> = ({ children }) => {
                 onClick={() => setCollapsed(!collapsed)}
                 style={{ fontSize: "16px", width: 64, height: 64 }}
               />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Link href={"/"} target="_blank">
+                  <Logo />
+                </Link>
+              </div>
+              {menuItems.map((items: any) => {
+                return (
+                  <span style={{ cursor: "pointer" }} onClick={items.onClick}>
+                    {items.label}
+                  </span>
+                );
+              })}
               <AvatarContainer />
             </div>
           </Header>
