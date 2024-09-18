@@ -14,6 +14,7 @@ import {
   Col,
   InputNumber,
   DatePicker,
+  Tag,
 } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,23 +23,28 @@ import {
   createAdvertiment,
   updateAdvertiment,
   deleteAdvertiment,
+  getAdvertimentByUser,
 } from "@/service/store/advertiment/advertiment.api";
 import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
 import { IAdvertisement, Status } from "@/model/advertisement.model";
 import dayjs from "dayjs";
+import { RootState } from "@/service/store/reducers";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-const AdManagement: React.FC = () => {
+const AdManagement = () => {
   const ads = useSelector(advertisementSelectors.selectAll);
+  const { user } = useSelector((state: RootState) => state.user.initialState);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [form] = Form.useForm();
   const [editingAdId, setEditingAdId] = React.useState<number | null>(null);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAdvertiments() as any);
+    if (user?.roleEntity?.roleCode === "admin")
+      return dispatch(getAdvertiments() as any);
+    dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
   }, [dispatch]);
 
   const columns = [
@@ -62,7 +68,16 @@ const AdManagement: React.FC = () => {
       render: (text: string) => dayjs(text).format("YYYY-MM-DD"),
     },
     { title: "Price", dataIndex: "price", key: "price" },
-    { title: "Status", dataIndex: "status", key: "status" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status: Status) => (
+        <Tag color={status === Status.APPROVED ? "green" : "gold"}>
+          {status === "APPROVED" ? "Đã phê duyệt" : "Chờ phê duyệt"}
+        </Tag>
+      ),
+    },
     {
       title: "Fields",
       dataIndex: "advertisingFields",
@@ -79,12 +94,14 @@ const AdManagement: React.FC = () => {
           <Button icon={<EditOutlined />} onClick={() => handleEdit(record)}>
             Edit
           </Button>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => handleSendApproval(record)}
-          >
-            Submit approval
-          </Button>
+          {user?.roleEntity?.roleCode === "user" && (
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => handleSendApproval(record)}
+            >
+              Submit approval
+            </Button>
+          )}
           <Button
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record.advertisementId)}

@@ -8,6 +8,8 @@ import {
   ShoppingCartOutlined,
   SafetyCertificateOutlined,
   SettingOutlined,
+  UnorderedListOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import AvatarContainer from "../components/avata/Avata";
@@ -39,37 +41,43 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
     {
       key: "/cms/dashboard",
       icon: <DashboardOutlined />,
-      label: "Dashboard",
-      roles: ["admin"],
+      label: "Tổng quan",
+      roles: ["admin", "user"],
     },
     {
       key: "/cms/userManagement",
       icon: <UserOutlined />,
-      label: "Users",
+      label: "Tài khoản",
       roles: ["admin"],
     },
     {
       key: "/cms/advertisingField",
-      icon: <ShoppingCartOutlined />,
-      label: "Advertising field",
+      icon: <UnorderedListOutlined />,
+      label: "Lĩnh vực quảng cáo",
       roles: ["admin", "user"],
     },
     {
       key: "/cms/adverManagement",
       icon: <ShoppingCartOutlined />,
-      label: "Advertisement",
+      label: "Quảng cáo",
       roles: ["admin", "user"],
+    },
+    {
+      key: "/cms/approvalManagement",
+      icon: <FormOutlined />,
+      label: "Phê duyệt",
+      roles: ["admin"],
     },
     {
       key: "/cms/role",
       icon: <SafetyCertificateOutlined />,
-      label: "Roles",
+      label: "Vai trò",
       roles: ["admin"],
     },
     {
       key: "/cms/settings",
       icon: <SettingOutlined />,
-      label: "Settings",
+      label: "Cài đặt",
       roles: ["admin"],
     },
   ];

@@ -26,6 +26,16 @@ const nextConfig = {
       "i1-sohoa.vnecdn.net",
       "i1-kinhdoanh.vnecdn.net",
     ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
+      },
+    ],
   },
 };
 

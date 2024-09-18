@@ -1,6 +1,8 @@
-import React from "react";
-import AdvertisingFieldManagement from "./AdvertisingField";
+import dynamic from "next/dynamic";
 
+const AdvertisingFieldManagement = dynamic(() => import("./AdvertisingField"), {
+  ssr: false,
+});
 const AdverManagement = () => {
   return (
     <>

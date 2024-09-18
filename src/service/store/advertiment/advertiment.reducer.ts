@@ -9,7 +9,9 @@ import {
   deleteAdvertiment,
   getAdvertiment,
   getAdvertiments,
+  getAdvertimentByUser,
   updateAdvertiment,
+  approvalAdvertiment,
 } from "./advertiment.api";
 import { RootState } from "../reducers";
 import { IResponse } from "@/shared/type/IResponse";
@@ -20,6 +22,7 @@ interface IInitialAdvertisementState {
   advertisement: IAdvertisement | null;
   updateStatusUser: boolean;
   deleteStatusUser: boolean;
+  approvalStatus: boolean;
   errorMessage: string | null;
 }
 
@@ -29,6 +32,7 @@ const initialState: IInitialAdvertisementState = {
   updateStatusUser: false,
   advertisement: null,
   deleteStatusUser: false,
+  approvalStatus: false,
 };
 
 const advertisementAdapter = createEntityAdapter({
@@ -46,6 +50,7 @@ const { actions, reducer } = createSlice({
 
     resetAll(state) {
       state.initialState.loading = false;
+      state.initialState.approvalStatus = false;
       state.initialState.updateStatusUser = false;
       state.initialState.deleteStatusUser = false;
       state.initialState.advertisement = null;
@@ -54,6 +59,7 @@ const { actions, reducer } = createSlice({
     resetEntity(state) {
       state.initialState.updateStatusUser = false;
       state.initialState.deleteStatusUser = false;
+      state.initialState.approvalStatus = false;
       state.initialState.loading = false;
       state.initialState.errorMessage = null;
     },
@@ -68,6 +74,22 @@ const { actions, reducer } = createSlice({
     );
     builder.addCase(
       getAdvertiments.rejected,
+      (state, { payload }: PayloadAction<any>) => {
+        state.initialState.errorMessage =
+          payload?.message || payload?.error || payload?.msg;
+        state.initialState.loading = false;
+      }
+    );
+
+    builder.addCase(
+      getAdvertimentByUser.fulfilled,
+      (state, { payload }: PayloadAction<IResponse<IAdvertisement[]>>) => {
+        advertisementAdapter.setAll(state as any, payload.data);
+        state.initialState.loading = false;
+      }
+    );
+    builder.addCase(
+      getAdvertimentByUser.rejected,
       (state, { payload }: PayloadAction<any>) => {
         state.initialState.errorMessage =
           payload?.message || payload?.error || payload?.msg;
@@ -123,6 +145,24 @@ const { actions, reducer } = createSlice({
         state.initialState.updateStatusUser = false;
       }
     );
+
+    builder.addCase(
+      approvalAdvertiment.fulfilled,
+      (state, { payload }: PayloadAction<IResponse<any>>) => {
+        state.initialState.loading = false;
+        state.initialState.approvalStatus = true;
+      }
+    );
+    builder.addCase(
+      approvalAdvertiment.rejected,
+      (state, { payload }: PayloadAction<any>) => {
+        state.initialState.errorMessage =
+          payload?.message || payload?.error || payload?.msg;
+        state.initialState.loading = false;
+        state.initialState.approvalStatus = false;
+      }
+    );
+
     builder.addCase(
       deleteAdvertiment.fulfilled,
       (state, { payload }: PayloadAction<IResponse<any>>) => {

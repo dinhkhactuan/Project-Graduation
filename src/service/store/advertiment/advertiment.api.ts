@@ -27,6 +27,18 @@ export const getAdvertiment = createAsyncThunk(
   }
 );
 
+export const getAdvertimentByUser = createAsyncThunk(
+  `get-advertisement-user`,
+  async (id: number, thunkAPI) => {
+    try {
+      const { data } = await axiosInstance.get(`${prefix}/user/${id}`);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const createAdvertiment = createAsyncThunk(
   `createUser-advertisement`,
   async (body: any, thunkAPI) => {
@@ -44,6 +56,18 @@ export const updateAdvertiment = createAsyncThunk(
   async (body: any, thunkAPI) => {
     try {
       const { data } = await axiosInstance.put(`${prefix}`, body);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const approvalAdvertiment = createAsyncThunk(
+  `approval-advertisement`,
+  async (id: number, thunkAPI) => {
+    try {
+      const { data } = await axiosInstance.put(`${prefix}/${id}/approve`);
       return data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);

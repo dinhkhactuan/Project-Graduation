@@ -1,5 +1,6 @@
 export enum Status {
   PENDING = "PENDING",
+  APPROVED = "APPROVED",
 }
 export interface INewAdvertisement {
   advertisementName: string;

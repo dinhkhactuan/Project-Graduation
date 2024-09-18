@@ -6,22 +6,34 @@ import LeftNews from "../LeftNews";
 import { FormCardItem } from "./form";
 import { LatestNews } from "@/service/store/news/news.api";
 import { getArticleSegment, processRSSData } from "@/shared/utils/ultils";
+import { useDispatch, useSelector } from "react-redux";
+import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
+import { IAdvertisement, Status } from "@/model/advertisement.model";
+import { getAdvertiments } from "@/service/store/advertiment/advertiment.api";
 
 const ViewLayoutDefault = () => {
   const [processedNews, setProcessedNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const banners = useSelector(advertisementSelectors.selectAll);
+  const bannerApproval = banners.filter(
+    (item: IAdvertisement) =>
+      item.status === Status.APPROVED && item.advertisementPosition === "right"
+  );
+  useEffect(() => {
+    dispatch(getAdvertiments() as any);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const data = await LatestNews();
-        setLoading(false);
         const processedData = processRSSData(data);
         setProcessedNews(processedData);
+        setLoading(false);
       } catch (error) {
         setLoading(true);
-        console.error("Error fetching news data:", error);
       }
     };
     fetchData();
@@ -62,8 +74,8 @@ const ViewLayoutDefault = () => {
           >
             <div className="w-2/6">
               <LeftNews
-                datas={getArticleSegment(processedNews, 7, 10)}
-                size={3}
+                datas={getArticleSegment(processedNews, 7, 12)}
+                size={5}
                 classname="pr-[10px] md:border-r md:border-gray-200"
                 vertical={true}
                 page={true}
@@ -71,22 +83,34 @@ const ViewLayoutDefault = () => {
             </div>
             <div className="w-2/5">
               <LeftNews
-                datas={getArticleSegment(processedNews, 10, 18)}
+                datas={getArticleSegment(processedNews, 12, 20)}
                 size={8}
                 classname="md:border-r md:border-gray-200"
               />
             </div>
+
             <div className="w-2/7">
-              <Banner
-                height={600}
-                src="https://cdn.dtadnetwork.com/creatives/html5/202407/1720429575/index.html"
-              />
-              <div className="mt-[20px]">
+              {bannerApproval.length > 0 && (
                 <Banner
-                  height={300}
-                  src="https://cdn.dtadnetwork.com/creatives/html5/202408/1723028288/index.html"
+                  height={650}
+                  src={bannerApproval[0].advertisementLink}
                 />
-              </div>
+              )}
+              {bannerApproval.length > 1 && (
+                <div className="mt-[20px]">
+                  <Banner
+                    height={650}
+                    src={bannerApproval[1].advertisementLink}
+                  />
+                </div>
+              )}
+              {bannerApproval.length === 0 && (
+                <LeftNews
+                  datas={getArticleSegment(processedNews, 50, 56)}
+                  size={8}
+                  classname="md:border-r md:border-gray-200"
+                />
+              )}
             </div>
           </div>
 
@@ -100,8 +124,8 @@ const ViewLayoutDefault = () => {
                 <LeftNews
                   datas={getArticleSegment(
                     processedNews,
-                    18 + index * 6,
-                    18 + (index + 1) * 6
+                    20 + index * 6,
+                    20 + (index + 1) * 6
                   )}
                   size={6}
                   classname={`pr-[10px] ${

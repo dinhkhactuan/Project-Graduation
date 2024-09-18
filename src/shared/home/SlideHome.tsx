@@ -1,20 +1,41 @@
+"use client";
+
 import Image from "next/image";
-import slide1 from "../../assets/img/slide1.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
+import { IAdvertisement, Status } from "@/model/advertisement.model";
+import { useEffect } from "react";
+import { getAdvertiments } from "@/service/store/advertiment/advertiment.api";
 
 const SlideHome = () => {
+  const dispatch = useDispatch();
+  const banners = useSelector(advertisementSelectors.selectAll);
+  const bannerApproval = banners.filter(
+    (item: IAdvertisement) =>
+      item.status === Status.APPROVED && item.advertisementPosition === "center"
+  );
+
+  useEffect(() => {
+    dispatch(getAdvertiments() as any);
+  }, [dispatch]);
+
+  if (bannerApproval.length === 0) {
+    return null;
+  }
+
+  const bannerSrc = bannerApproval[0]?.advertisementLink || "";
+
   return (
-    <div className="w-full">
-      <Image
-        style={{
-          width: "100%",
-        }}
-        width={0}
-        height={0}
-        sizes="100vw"
-        className="w-full h-full"
-        src={slide1}
-        alt=""
-      />
+    <div className="w-full h-[300px] relative">
+      {bannerSrc && (
+        <Image
+          src={bannerSrc}
+          alt="Advertisement Banner"
+          fill
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+        />
+      )}
     </div>
   );
 };

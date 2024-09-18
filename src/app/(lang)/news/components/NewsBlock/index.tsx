@@ -14,7 +14,6 @@ export default function MostReadNews(props: MostReadNewsProps) {
   const { heading, processedNews } = props;
 
   const { themeData, setCurrentTheme } = useTheme();
-  console.log(processedNews);
 
   return (
     <div
