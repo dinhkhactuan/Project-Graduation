@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import emptyImg from "../../assets/img/image-news.jpg";
-import Image from "next/image";
+import { StaticImageData } from "next/image";
 
 interface ICustomImageProps {
-  src: string;
+  src: string | StaticImageData;
   rate?: "1:1" | "16:9" | "4:3";
   object?: "contain" | "cover";
   scaleWhenHover?: boolean;
-  onClick?: Function;
+  onClick?: (e: React.MouseEvent<HTMLImageElement>) => void;
+  alt?: string;
 }
 
 const CustomImage = ({
@@ -16,6 +17,7 @@ const CustomImage = ({
   object = "cover",
   scaleWhenHover = true,
   onClick,
+  alt = "",
 }: ICustomImageProps) => {
   const [imageError, setImageError] = useState(false);
   const [emptyImage, setEmptyImage] = useState(false);
@@ -23,88 +25,45 @@ const CustomImage = ({
   const [horizontal, vertical] = rate.split(":");
   const paddingTop = (+vertical / +horizontal) * 100;
 
-  const urlPattern =
-    /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?/;
-
   useEffect(() => {
     if (!src) {
       setEmptyImage(true);
-    } else if (!urlPattern.test(src)) {
-      setImageError(true);
+    } else {
+      setImageError(false);
+      setEmptyImage(false);
     }
   }, [src]);
 
+  const handleImageError = () => {
+    console.error("Image failed to load:", src);
+    setImageError(true);
+  };
+
+  const getImageSrc = (src: string | StaticImageData): string => {
+    if (typeof src === "string") {
+      return src;
+    }
+    return src.src;
+  };
+
   return (
-    <>
-      {!imageError ? (
-        emptyImage ? (
-          <div
-            style={{ width: "100%", paddingTop: `${paddingTop}%` }}
-            className="relative overflow-hidden"
-          >
-            <Image
-              src={emptyImg}
-              alt=""
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                inset: 0,
-                objectFit: "contain",
-                opacity: 1,
-              }}
-            />
-          </div>
-        ) : (
-          <div
-            style={{ width: "100%", paddingTop: `${paddingTop}%` }}
-            className="relative overflow-hidden"
-          >
-            <Image
-              src={`/api/proxy-image?url=${encodeURIComponent(src)}`}
-              alt=""
-              onClick={(e) => {
-                onClick && onClick(e);
-              }}
-              width={0}
-              height={0}
-              sizes="100vw"
-              className={`absolute w-full h-full inset-0 ${
-                scaleWhenHover ? "hover:scale-110 duration-500" : ""
-              }`}
-              style={{ objectFit: object }}
-              onError={() => {
-                setImageError(true);
-              }}
-            />
-          </div>
-        )
-      ) : (
-        <div
-          style={{ width: "100%", paddingTop: `${paddingTop}%` }}
-          className="relative overflow-hidden"
-        >
-          <Image
-            src={emptyImg}
-            alt=""
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              inset: 0,
-              objectFit: "contain",
-              opacity: 1,
-            }}
-          />
-        </div>
-      )}
-    </>
+    <div
+      style={{ width: "100%", paddingTop: `${paddingTop}%` }}
+      className="relative overflow-hidden"
+    >
+      <img
+        src={
+          !imageError && !emptyImage ? getImageSrc(src) : getImageSrc(emptyImg)
+        }
+        alt={alt}
+        onClick={onClick}
+        onError={handleImageError}
+        className={`absolute w-full h-full inset-0 ${
+          scaleWhenHover ? "hover:scale-110 duration-500" : ""
+        }`}
+        style={{ objectFit: object }}
+      />
+    </div>
   );
 };
 
