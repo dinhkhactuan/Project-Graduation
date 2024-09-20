@@ -1,28 +1,6 @@
 import { NextResponse } from "next/server";
 import { XMLParser } from "fast-xml-parser";
 
-export function fixImageUrls(data: any, baseUrl: string): any {
-  if (Array.isArray(data)) {
-    return data.map((item) => fixImageUrls(item, baseUrl));
-  } else if (typeof data === "object" && data !== null) {
-    const result: any = {};
-    for (const key in data) {
-      if (key === "enclosure" && data[key].url) {
-        result[key] = {
-          ...data[key],
-          url: new URL(data[key].url, baseUrl).href,
-        };
-      } else if (key === "image" && typeof data[key] === "string") {
-        result[key] = new URL(data[key], baseUrl).href;
-      } else {
-        result[key] = fixImageUrls(data[key], baseUrl);
-      }
-    }
-    return result;
-  }
-  return data;
-}
-
 export async function handleRSS(sources: Record<string, string>) {
   try {
     const responses = await Promise.all(
@@ -56,8 +34,6 @@ export async function handleRSS(sources: Record<string, string>) {
         } else {
           throw new Error(`Unsupported content type from ${url}`);
         }
-        data = fixImageUrls(data, new URL(url).origin);
-
         return data;
       })
     );
