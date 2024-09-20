@@ -8,8 +8,10 @@ svg {
 }
 
 .web-container {
-  width: 1170px;
+  max-width: 1310px;
   margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 @media screen and (max-width: 576.99px) {

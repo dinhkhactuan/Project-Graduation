@@ -3,16 +3,11 @@ import NewsEvent from "../news/newsEvent/NewsEvent";
 import { TypePage } from "@/service/TypePage";
 
 const PageNews = async () => {
-  const rawResult = await LatestNews("tin-noi-bat.rss");
+  const rawResult = await LatestNews();
 
   return (
     <>
-      <NewsEvent
-        data={rawResult?.items}
-        lang="vi"
-        url="giai-tri.rss"
-        type={TypePage.ENTERTAINMENT}
-      />
+      <NewsEvent lang="vi" type={TypePage.ENTERTAINMENT} />
     </>
   );
 };

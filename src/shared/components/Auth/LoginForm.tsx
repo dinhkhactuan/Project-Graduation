@@ -37,7 +37,7 @@ const LoginForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (token && loginSuccess && !hasShownLoginMessage) {
+    if (token && loginSuccess) {
       toast.success("Đăng nhập thành công");
       dispatch(setLoginMessageShown());
       router.push("/cms/dashboard");

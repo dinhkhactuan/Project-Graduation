@@ -1,27 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CustomImage from "@/components/custom/CustomImage";
 import { DescriptionDateTime } from "@/shared/utils/ultils";
-import { LatestNews } from "@/service/store/news/news.api";
 import { Item } from "@/model/news.model";
 import { useTheme } from "@/app/(provider)/ThemeProvider";
 
 type MostReadNewsProps = {
-  url: string;
   heading: string;
+  processedNews: any;
 };
 
 export default function MostReadNews(props: MostReadNewsProps) {
-  const { url, heading } = props;
-  const [dataList, setDataList] = useState<any>([]);
-  useEffect(() => {
-    const getData = async () => {
-      const data = await LatestNews(url);
+  const { heading, processedNews } = props;
 
-      setDataList(data?.items);
-    };
-    getData();
-  }, []);
   const { themeData, setCurrentTheme } = useTheme();
 
   return (
@@ -38,8 +29,8 @@ export default function MostReadNews(props: MostReadNewsProps) {
         </p>
       </div>
       <div className="flex flex-col items-start gap-3">
-        {dataList?.length > 0 ? (
-          dataList?.slice(0, 5)?.map((ele: Item, index: number) => (
+        {processedNews?.length > 0 ? (
+          processedNews?.map((ele: Item, index: number) => (
             <div key={index} className="flex gap-2 grow w-full">
               <div
                 className="w-[100px] shrink-0"

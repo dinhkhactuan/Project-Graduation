@@ -44,14 +44,16 @@ const RoleManagement: React.FC = () => {
       );
       dispatch(getRoles() as any);
       dispatch(resetEntity());
-      return;
     }
+  }, [updateStatusRole]);
+
+  useEffect(() => {
     if (deleteStatusRole) {
       toast.success(`Xóa vai trò thành công`);
       dispatch(getRoles() as any);
       dispatch(resetEntity());
     }
-  }, [updateStatusRole, deleteStatusRole]);
+  }, [deleteStatusRole]);
 
   const showModal = (role: any = null) => {
     setEditingRole(role);

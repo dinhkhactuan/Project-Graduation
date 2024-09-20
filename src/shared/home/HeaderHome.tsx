@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 import { Layout, Menu, MenuProps, Tooltip } from "antd";
-import Image from "next/image";
-import Search, { SearchProps } from "antd/es/input/Search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloud, faGear } from "@fortawesome/free-solid-svg-icons";
 import SettingHome from "../components/SettingHome";
@@ -11,6 +9,8 @@ import { useMenuItems } from "./itemsMenu.model";
 import Link from "next/link";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@/app//(provider)/ThemeProvider";
+import SearchHome from "./SearchHome";
+import Logo from "./Logo";
 
 const { Header } = Layout;
 
@@ -24,8 +24,6 @@ const HeaderHome = () => {
   const onClick: MenuProps["onClick"] = (e) => {
     setCurrent(e.key);
   };
-  const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
-    console.log(info?.source, value);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -57,12 +55,7 @@ const HeaderHome = () => {
           <div className="flex items-center gap-4">
             <div>
               <Link href={"/"}>
-                <Image
-                  width={150}
-                  height={150}
-                  src="https://cdnweb.dantri.com.vn/dist/static-logo.1-0-1.742f36bc45f3443d0e59.svg"
-                  alt=""
-                />
+                <Logo />
               </Link>
             </div>
             <div className="flex items-center gap-3">
@@ -78,13 +71,8 @@ const HeaderHome = () => {
               </div>
             </div>
           </div>
-          <Search
-            className="!w-2/5"
-            placeholder="input search text"
-            onSearch={onSearch}
-            size="large"
-            enterButton
-          />
+          <SearchHome className="!w-2/5" />
+
           <div>
             <Tooltip title={"Cài đặt"} className="mr-[14px]">
               <FontAwesomeIcon icon={faGear} size="xl" onClick={showModal} />

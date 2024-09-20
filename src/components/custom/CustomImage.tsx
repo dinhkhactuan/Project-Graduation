@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import emptyImg from "../../assets/img/image-error.png";
+import emptyImg from "../../assets/img/image-news.jpg";
 import Image from "next/image";
 
 interface ICustomImageProps {

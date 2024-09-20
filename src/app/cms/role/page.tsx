@@ -1,6 +1,7 @@
-import React from "react";
-import RoleManagement from "./RoleManagement";
-
+import dynamic from "next/dynamic";
+const RoleManagement = dynamic(() => import("./RoleManagement"), {
+  ssr: false,
+});
 const Role = () => {
   return (
     <>

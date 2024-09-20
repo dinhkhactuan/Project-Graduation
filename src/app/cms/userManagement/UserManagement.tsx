@@ -1,11 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { Table, Button, Space, Modal, Form, Input, Radio } from "antd";
-import {
-  UserOutlined,
-  MailOutlined,
-  LockOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createUser,
@@ -181,19 +177,24 @@ const UserManagement: React.FC = () => {
           >
             <Input prefix={<MailOutlined />} />
           </Form.Item>
-          <Form.Item
-            name="userPassword"
-            label="Password"
-            rules={[
-              { required: !editingUser, message: "Please input the password!" },
-              {
-                min: 6,
-                message: "Password must be at least 6 characters long",
-              },
-            ]}
-          >
-            <Input.Password prefix={<LockOutlined />} />
-          </Form.Item>
+          {!editingUser && (
+            <Form.Item
+              name="userPassword"
+              label="Password"
+              rules={[
+                {
+                  required: !editingUser,
+                  message: "Please input the password!",
+                },
+                {
+                  min: 6,
+                  message: "Password must be at least 6 characters long",
+                },
+              ]}
+            >
+              <Input.Password prefix={<LockOutlined />} />
+            </Form.Item>
+          )}
           <Form.Item
             name="phoneNumber"
             label="Phone Number"

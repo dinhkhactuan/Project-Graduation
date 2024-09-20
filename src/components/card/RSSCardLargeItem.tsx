@@ -20,7 +20,7 @@ export default function CardLargeItem(props: CardLargeItem) {
   return (
     <>
       {data && (
-        <Link href={data.guid} target="_blank">
+        <Link href={data.link || data.guid} target="_blank">
           <div className={`card-item cursor-pointer`}>
             <div
               className="w-full shrink-0"

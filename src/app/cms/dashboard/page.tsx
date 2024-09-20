@@ -1,8 +1,13 @@
-import React from "react";
-import Dashboard from "./Dashboard";
-
+import dynamic from "next/dynamic";
+const Dashboard = dynamic(() => import("./Dashboard"), {
+  ssr: false,
+});
 const DashboardPage = () => {
-  return <Dashboard />;
+  return (
+    <>
+      <Dashboard />
+    </>
+  );
 };
 
 export default DashboardPage;
