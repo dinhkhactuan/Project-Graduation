@@ -1,7 +1,6 @@
 import { Avatar } from "antd";
 import Title from "antd/es/typography/Title";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import avata from "@/assets/img/avata.jpg";
 
 interface IPropAvatarContainer {
@@ -11,13 +10,9 @@ interface IPropAvatarContainer {
 }
 const AvatarContainer = (props: IPropAvatarContainer) => {
   const { className, textColor, collapsed } = props;
-  const router = useRouter();
 
   return (
     <div
-      onClick={() => {
-        router.push("/cms/profile");
-      }}
       className={`logo ${className}`}
       style={{
         height: "64px",

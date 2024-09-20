@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Table, Button, Popconfirm, Tag } from "antd";
 import { DeleteOutlined, CheckOutlined } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
@@ -19,16 +19,22 @@ const ApprovalManagement = () => {
   const { approvalStatus } = useSelector(
     (state: RootState) => state.advertiment.initialState
   );
-  useEffect(() => {
+  const fetchApprovals = useCallback(() => {
     dispatch(getApprovals() as any);
   }, []);
 
   useEffect(() => {
+    fetchApprovals();
+  }, [fetchApprovals]);
+
+  useEffect(() => {
     if (approvalStatus) {
       toast.success("Phê duyệt thành công");
+      dispatch(resetEntity());
+      fetchApprovals();
     }
-    dispatch(resetEntity());
-  });
+  }, [approvalStatus]);
+
   const handleDelete = (id: number) => {};
 
   const handleApprove = (id: number) => {

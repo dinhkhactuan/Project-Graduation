@@ -49,7 +49,13 @@ const AdManagement = () => {
 
   const columns = [
     { title: "Name", dataIndex: "advertisementName", key: "advertisementName" },
-    { title: "Link", dataIndex: "advertisementLink", key: "advertisementLink" },
+    {
+      title: "Link",
+      dataIndex: "advertisementLink",
+      key: "advertisementLink",
+      width: 100,
+      ellipsis: true,
+    },
     {
       title: "Position",
       dataIndex: "advertisementPosition",
@@ -67,7 +73,13 @@ const AdManagement = () => {
       key: "endTime",
       render: (text: string) => dayjs(text).format("YYYY-MM-DD"),
     },
-    { title: "Price", dataIndex: "price", key: "price" },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      width: 100,
+      ellipsis: true,
+    },
     {
       title: "Status",
       dataIndex: "status",

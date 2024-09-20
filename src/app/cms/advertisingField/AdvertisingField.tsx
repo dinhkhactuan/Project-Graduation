@@ -11,6 +11,7 @@ import {
   Statistic,
   Row,
   Col,
+  Popconfirm,
 } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import {
@@ -20,8 +21,13 @@ import {
   updateAdvertisingField,
 } from "@/service/store/advertising-field/advertising-field.api";
 import { useDispatch, useSelector } from "react-redux";
-import { AdvertisingFieldSelectors } from "@/service/store/advertising-field/advertising-field.reducer";
+import {
+  AdvertisingFieldSelectors,
+  resetEntity,
+} from "@/service/store/advertising-field/advertising-field.reducer";
 import { IAdvertisingField } from "@/model/advertisingField.model";
+import { RootState } from "@/service/store/reducers";
+import { toast } from "react-toastify";
 
 const AdvertisingFieldManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -30,11 +36,35 @@ const AdvertisingFieldManagement = () => {
     null
   );
   const fields = useSelector(AdvertisingFieldSelectors.selectAll);
+  const { updateStatusUser, deleteStatusUser } = useSelector(
+    (state: RootState) => state.advertisingField.initialState
+  );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAdvertisingFields() as any);
   }, [dispatch]);
 
+  useEffect(() => {
+    if (updateStatusUser) {
+      toast.success(
+        `${
+          editingFieldId
+            ? "cập nhật lĩnh vực quảng cáo thành công"
+            : "Thêm mới lĩnh vực quảng cáo thành công"
+        }`
+      );
+      dispatch(getAdvertisingFields() as any);
+      dispatch(resetEntity());
+    }
+  }, [updateStatusUser]);
+
+  useEffect(() => {
+    if (deleteStatusUser) {
+      toast.success("Xóa lĩnh vực quảng cáo thành công");
+      dispatch(getAdvertisingFields() as any);
+      dispatch(resetEntity());
+    }
+  }, [deleteStatusUser]);
   const columns = [
     { title: "ID", dataIndex: "advertisingFieldId", key: "advertisingFieldId" },
     {
@@ -51,13 +81,16 @@ const AdvertisingFieldManagement = () => {
             <EditOutlined className="w-4 h-4 mr-2" />
             Edit
           </Button>
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.advertisingFieldId)}
-            danger
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa lĩnh vực quảng cáo này?"
+            onConfirm={() => handleDelete(record.advertisingFieldId)}
+            okText="Có"
+            cancelText="Không"
           >
-            Delete
-          </Button>
+            <Button icon={<DeleteOutlined />} danger>
+              Xóa
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },

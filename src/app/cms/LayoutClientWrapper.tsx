@@ -6,6 +6,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   LogoutOutlined,
+  ProfileOutlined,
 } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { getUserInfo } from "@/service/store/user/user.api";
@@ -51,11 +52,16 @@ const LayoutClientWrapper: React.FC<LayoutClientWrapperProps> = ({
     toast.success("Đăng xuất thành công");
     navigate.push("/login");
   };
-
+  const handleProfile = () => {
+    navigate.push("/cms/profile");
+  };
   const menu = (
     <Menu>
       <Menu.Item key="1" icon={<LogoutOutlined />} onClick={handleLogout}>
         Đăng xuất
+      </Menu.Item>
+      <Menu.Item key="2" icon={<ProfileOutlined />} onClick={handleProfile}>
+        Hồ sơ cá nhân
       </Menu.Item>
     </Menu>
   );
