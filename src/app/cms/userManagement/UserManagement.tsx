@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Space, Modal, Form, Input, Radio } from "antd";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,15 +16,15 @@ import { toast } from "react-toastify";
 import { getRoles } from "@/service/store/role/role.api";
 import { roleSelectors } from "@/service/store/role/role.reducer";
 
-const UserManagement: React.FC = () => {
+const UserManagement = () => {
   const dispatch = useDispatch();
   const roles = useSelector(roleSelectors.selectAll);
   const users = useSelector(userSelectors.selectAll);
   const { updateStatusUser, deleteStatusUser } = useSelector(
     (state: RootState) => state.user.initialState
   );
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const [editingUser, setEditingUser] = React.useState<any>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingUser, setEditingUser] = useState<any>(null);
   const [form] = Form.useForm();
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Layout, Button, Dropdown, Menu } from "antd";
 import {
   MenuFoldOutlined,
@@ -31,13 +31,7 @@ const Sidebar = dynamic(() => import("../../shared/home/Sidebar"), {
 
 const { Header, Content } = Layout;
 
-interface LayoutClientWrapperProps {
-  children: React.ReactNode;
-}
-
-const LayoutClientWrapper: React.FC<LayoutClientWrapperProps> = ({
-  children,
-}) => {
+const LayoutClientWrapper = ({ children }: { children: ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const menuItems = useMenuItems();
   const dispatch = useDispatch();

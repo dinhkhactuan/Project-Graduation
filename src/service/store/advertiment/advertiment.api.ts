@@ -1,5 +1,6 @@
 import axiosInstance from "@/service/config/axios-interceptor";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosRequestConfig } from "axios";
 
 const prefix = "/advertisement";
 
@@ -69,6 +70,30 @@ export const approvalAdvertiment = createAsyncThunk(
     try {
       const { data } = await axiosInstance.put(`${prefix}/${id}/approve`);
       return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const revenueAdvertiment = createAsyncThunk(
+  `revenue-advertisement`,
+  async (id: number, thunkAPI) => {
+    try {
+      const { data } = await axiosInstance.get(`${prefix}/${id}/revenue`);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+//xuất file
+export const exportFileAdvertiment = createAsyncThunk(
+  `export-advertisement`,
+  async (_, thunkAPI: any): Promise<any> => {
+    const config: AxiosRequestConfig<any> = { responseType: "blob" };
+    try {
+      return await axiosInstance.get(`${prefix}/export-advertisements`, config);
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
