@@ -17,9 +17,7 @@ import {
   Tag,
 } from "antd";
 import {
-  EditOutlined,
   EyeOutlined,
-  PlusOutlined,
   FileDoneOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +25,6 @@ import {
   getAdvertiments,
   createAdvertiment,
   updateAdvertiment,
-  deleteAdvertiment,
   getAdvertimentByUser,
   revenueAdvertiment,
   exportFileAdvertiment,

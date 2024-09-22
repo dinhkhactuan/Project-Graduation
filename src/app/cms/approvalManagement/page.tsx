@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import ApprovalManagement from "./ApprovalManagement";
 
 const Approval = () => {
