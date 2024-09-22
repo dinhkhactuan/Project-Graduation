@@ -17,17 +17,17 @@ import {
   Tag,
 } from "antd";
 import {
-  EditOutlined,
-  DeleteOutlined,
-  PlusOutlined,
+  EyeOutlined,
+  FileDoneOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAdvertiments,
   createAdvertiment,
   updateAdvertiment,
-  deleteAdvertiment,
   getAdvertimentByUser,
+  revenueAdvertiment,
+  exportFileAdvertiment,
 } from "@/service/store/advertiment/advertiment.api";
 import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
 import { IAdvertisement, Status } from "@/model/advertisement.model";
@@ -37,34 +37,30 @@ import { RootState } from "@/service/store/reducers";
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-const AdManagement = () => {
-  const ads = useSelector(advertisementSelectors.selectAll);
+const RevenueManagement = () => {
+  const advertisements = useSelector(advertisementSelectors.selectAll);
   const { user } = useSelector((state: RootState) => state.user.initialState);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentRevenue, setCurrentRevenue] = useState<any>(null);
   const [form] = Form.useForm();
   const [editingAdId, setEditingAdId] = useState<number | null>(null);
-
+  const ads = advertisements.filter(
+    (item: IAdvertisement) => item.status === Status.APPROVED
+  );
+  const { revenue } = useSelector(
+    (state: RootState) => state.advertiment.initialState
+  );
   const dispatch = useDispatch();
   useEffect(() => {
-    if (user?.roleEntity?.roleCode === "admin")
-      return dispatch(getAdvertiments() as any);
-    dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+    if (user?.userId) {
+      if (user?.roleEntity?.roleCode === "admin")
+        return dispatch(getAdvertiments() as any);
+      dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+    }
   }, [user?.userId]);
 
   const columns = [
     { title: "Name", dataIndex: "advertisementName", key: "advertisementName" },
-    {
-      title: "Link",
-      dataIndex: "advertisementLink",
-      key: "advertisementLink",
-      width: 100,
-      ellipsis: true,
-    },
-    {
-      title: "Position",
-      dataIndex: "advertisementPosition",
-      key: "advertisementPosition",
-    },
     {
       title: "Start Date",
       dataIndex: "startTime",
@@ -107,36 +103,18 @@ const AdManagement = () => {
       key: "action",
       render: (_: any, record: IAdvertisement) => (
         <Space size="middle">
-          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)}>
-            Edit
-          </Button>
-          {user?.roleEntity?.roleCode === "user" && (
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => handleSendApproval(record)}
-            >
-              Submit approval
-            </Button>
-          )}
           <Button
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.advertisementId)}
-            danger
+            icon={<EyeOutlined />}
+            onClick={() => handleViewRevenue(record)}
           >
-            Delete
+            Doanh thu
           </Button>
         </Space>
       ),
     },
   ];
 
-  const handleAdd = () => {
-    setEditingAdId(null);
-    form.resetFields();
-    setIsModalVisible(true);
-  };
-
-  const handleEdit = (record: IAdvertisement) => {
+  const handleViewRevenue = async (record: IAdvertisement) => {
     setEditingAdId(record.advertisementId);
     form.setFieldsValue({
       ...record,
@@ -145,23 +123,16 @@ const AdManagement = () => {
         (field) => field.advertisingFieldId
       ),
     });
+    try {
+      const result = await dispatch(
+        revenueAdvertiment(record.advertisementId) as any
+      );
+      setCurrentRevenue(result.payload?.data);
+    } catch (error) {
+      console.error("Error fetching revenue:", error);
+      setCurrentRevenue(null);
+    }
     setIsModalVisible(true);
-  };
-
-  const handleSendApproval = (record: IAdvertisement) => {
-    setEditingAdId(record.advertisementId);
-    form.setFieldsValue({
-      ...record,
-      timeRange: [dayjs(record.startTime), dayjs(record.endTime)],
-      advertisingFields: record.advertisingFields.map(
-        (field) => field.advertisingFieldId
-      ),
-    });
-    setIsModalVisible(true);
-  };
-
-  const handleDelete = (id: number) => {
-    dispatch(deleteAdvertiment(id) as any);
   };
 
   const handleModalOk = () => {
@@ -192,6 +163,9 @@ const AdManagement = () => {
     });
   };
 
+  const handleExportFile = () => {
+    dispatch(exportFileAdvertiment() as any);
+  };
   return (
     <div style={{ padding: "24px" }}>
       <Row gutter={16} style={{ marginBottom: "24px" }}>
@@ -200,14 +174,7 @@ const AdManagement = () => {
             <Statistic title="Tổng số quảng cáo" value={ads.length} />
           </Card>
         </Col>
-        <Col span={8}>
-          <Card>
-            <Statistic
-              title="Trạng thái quảng cáo"
-              value={ads.filter((ad) => ad.status === Status.PENDING).length}
-            />
-          </Card>
-        </Col>
+
         <Col span={8}>
           <Card>
             <Statistic
@@ -217,16 +184,14 @@ const AdManagement = () => {
           </Card>
         </Col>
       </Row>
-
       <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={handleAdd}
-        style={{ marginBottom: "16px" }}
+        className="ml-2"
+        icon={<FileDoneOutlined />}
+        onClick={handleExportFile}
+        style={{ marginBottom: "16px", background: "#0db50d", color: "#FFF" }}
       >
-        Thêm mới quảng cáo
+        Xuất file excel
       </Button>
-
       <Table columns={columns} dataSource={ads} rowKey="advertisementId" />
 
       <Modal
@@ -243,6 +208,11 @@ const AdManagement = () => {
           >
             <Input />
           </Form.Item>
+          {currentRevenue !== null && (
+            <Form.Item label="Revenue">
+              <Input value={currentRevenue.amount} readOnly />
+            </Form.Item>
+          )}
           <Form.Item
             name="advertisementLink"
             label="Link"
@@ -287,4 +257,4 @@ const AdManagement = () => {
   );
 };
 
-export default AdManagement;
+export default RevenueManagement;

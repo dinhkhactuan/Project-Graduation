@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   Button,
@@ -32,9 +32,7 @@ import { toast } from "react-toastify";
 const AdvertisingFieldManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
-  const [editingFieldId, setEditingFieldId] = React.useState<number | null>(
-    null
-  );
+  const [editingFieldId, setEditingFieldId] = useState<number | null>(null);
   const fields = useSelector(AdvertisingFieldSelectors.selectAll);
   const { updateStatusUser, deleteStatusUser } = useSelector(
     (state: RootState) => state.advertisingField.initialState

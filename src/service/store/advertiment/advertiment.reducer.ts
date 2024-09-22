@@ -12,6 +12,8 @@ import {
   getAdvertimentByUser,
   updateAdvertiment,
   approvalAdvertiment,
+  revenueAdvertiment,
+  exportFileAdvertiment,
 } from "./advertiment.api";
 import { RootState } from "../reducers";
 import { IResponse } from "@/shared/type/IResponse";
@@ -24,6 +26,7 @@ interface IInitialAdvertisementState {
   deleteStatusUser: boolean;
   approvalStatus: boolean;
   errorMessage: string | null;
+  revenue: null;
 }
 
 const initialState: IInitialAdvertisementState = {
@@ -33,6 +36,7 @@ const initialState: IInitialAdvertisementState = {
   advertisement: null,
   deleteStatusUser: false,
   approvalStatus: false,
+  revenue: null,
 };
 
 const advertisementAdapter = createEntityAdapter({
@@ -160,6 +164,47 @@ const { actions, reducer } = createSlice({
           payload?.message || payload?.error || payload?.msg;
         state.initialState.loading = false;
         state.initialState.approvalStatus = false;
+      }
+    );
+
+    builder.addCase(
+      revenueAdvertiment.fulfilled,
+      (state, { payload }: PayloadAction<IResponse<any>>) => {
+        state.initialState.revenue = payload.data;
+        state.initialState.loading = false;
+      }
+    );
+    builder.addCase(
+      revenueAdvertiment.rejected,
+      (state, { payload }: PayloadAction<any>) => {
+        state.initialState.errorMessage =
+          payload?.message || payload?.error || payload?.msg;
+        state.initialState.loading = false;
+      }
+    );
+
+    builder.addCase(
+      exportFileAdvertiment.fulfilled,
+      (state, { payload }: PayloadAction<IResponse<any>>) => {
+        try {
+          console.log(payload);
+
+          const url = window.URL.createObjectURL(new Blob([payload.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "Advertisement.xlsx");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (error) {}
+      }
+    );
+    builder.addCase(
+      exportFileAdvertiment.rejected,
+      (state, { payload }: PayloadAction<any>) => {
+        state.initialState.errorMessage =
+          payload?.message || payload?.error || payload?.msg;
+        state.initialState.loading = false;
       }
     );
 

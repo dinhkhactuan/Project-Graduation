@@ -1,7 +1,4 @@
-import dynamic from "next/dynamic";
-const ApprovalManagement = dynamic(() => import("./ApprovalManagement"), {
-  ssr: false,
-});
+import ApprovalManagement from "./ApprovalManagement";
 
 const Approval = () => {
   return (

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Table, Button, Modal } from "antd";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";

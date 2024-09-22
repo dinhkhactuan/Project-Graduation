@@ -2,7 +2,7 @@ import axios from "axios";
 import { KEYS_STORAGE, SERVER_API_URL } from "../host";
 import { getDataCookie } from "@/shared/utils/ultils";
 
-const TIMEOUT = 1 * 60 * 1000;
+const TIMEOUT = 2 * 60 * 1000;
 export const IS_SERVER = typeof window === "undefined";
 
 const axiosInstance = axios.create({

@@ -69,6 +69,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       roles: ["admin"],
     },
     {
+      key: "/cms/revenue",
+      icon: <ShoppingCartOutlined />,
+      label: "Doanh thu",
+      roles: ["admin", "user"],
+    },
+    {
       key: "/cms/role",
       icon: <SafetyCertificateOutlined />,
       label: "Vai trò",
