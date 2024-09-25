@@ -15,11 +15,13 @@ import {
   InputNumber,
   DatePicker,
   Tag,
+  Tooltip,
 } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   PlusOutlined,
+  CreditCardOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,11 +30,13 @@ import {
   updateAdvertiment,
   deleteAdvertiment,
   getAdvertimentByUser,
+  revenueAdvertiment,
 } from "@/service/store/advertiment/advertiment.api";
 import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
 import { IAdvertisement, Status } from "@/model/advertisement.model";
 import dayjs from "dayjs";
 import { RootState } from "@/service/store/reducers";
+import { createPayment } from "@/service/store/vnpay/vnpay.api";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -43,7 +47,18 @@ const AdManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editingAdId, setEditingAdId] = useState<number | null>(null);
+  const [urlPayment, setUrlPayment] = useState<string>("");
 
+  useEffect(() => {
+    if (urlPayment) {
+      const a = document.createElement("a");
+      a.setAttribute("href", urlPayment), a.setAttribute("target", "_blank");
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }, [urlPayment]);
   const dispatch = useDispatch();
   useEffect(() => {
     if (user?.roleEntity?.roleCode === "admin")
@@ -107,24 +122,36 @@ const AdManagement = () => {
       key: "action",
       render: (_: any, record: IAdvertisement) => (
         <Space size="middle">
-          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)}>
-            Edit
-          </Button>
-          {user?.roleEntity?.roleCode === "user" && (
+          <Tooltip title="Chỉnh sửa">
             <Button
               icon={<EditOutlined />}
-              onClick={() => handleSendApproval(record)}
-            >
-              Submit approval
-            </Button>
+              onClick={() => handleEdit(record)}
+            ></Button>
+          </Tooltip>
+          {user?.roleEntity?.roleCode === "user" &&
+            record.status !== Status.APPROVED && (
+              <Tooltip title="Gửi phê duyệt">
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() => handleSendApproval(record)}
+                ></Button>
+              </Tooltip>
+            )}
+          {record.status === Status.APPROVED && (
+            <Tooltip title="Thanh toán">
+              <Button
+                icon={<CreditCardOutlined />}
+                onClick={() => handlePayment(record)}
+              ></Button>
+            </Tooltip>
           )}
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.advertisementId)}
-            danger
-          >
-            Delete
-          </Button>
+          <Tooltip title="Xóa">
+            <Button
+              icon={<DeleteOutlined />}
+              onClick={() => handleDelete(record.advertisementId)}
+              danger
+            ></Button>
+          </Tooltip>
         </Space>
       ),
     },
@@ -134,6 +161,23 @@ const AdManagement = () => {
     setEditingAdId(null);
     form.resetFields();
     setIsModalVisible(true);
+  };
+
+  const handlePayment = (record: IAdvertisement) => {
+    dispatch(revenueAdvertiment(record.advertisementId) as any).then(
+      (data: any) => {
+        const revenue = data.payload?.data;
+        const amount = Number(revenue.amount.toString().replace(/[,.]/g, ""));
+        dispatch(
+          createPayment({
+            amount: amount,
+            orderInfo: `Thanh toán ${record.advertisementName}`,
+          }) as any
+        ).then((data: any) => {
+          setUrlPayment(data.payload);
+        });
+      }
+    );
   };
 
   const handleEdit = (record: IAdvertisement) => {
@@ -217,7 +261,6 @@ const AdManagement = () => {
           </Card>
         </Col>
       </Row>
-
       <Button
         type="primary"
         icon={<PlusOutlined />}
