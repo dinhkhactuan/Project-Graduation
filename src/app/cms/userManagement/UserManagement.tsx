@@ -1,6 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Table, Button, Space, Modal, Form, Input, Radio } from "antd";
+import {
+  Table,
+  Button,
+  Space,
+  Modal,
+  Form,
+  Input,
+  Radio,
+  Tooltip,
+  Popconfirm,
+} from "antd";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -75,6 +85,8 @@ const UserManagement = () => {
     form
       .validateFields()
       .then((values) => {
+        console.log(values);
+
         setIsModalVisible(false);
         if (editingUser) {
           const updateData = values.password
@@ -116,17 +128,20 @@ const UserManagement = () => {
           <Button type="link" onClick={() => showModal(record)}>
             Edit
           </Button>
-          <Button
-            type="link"
-            danger
-            onClick={() => {
-              if (window.confirm("Bạn có chắc chắn muốn xóa")) {
-                dispatch(deleteUser(Number(record.userId)) as any);
-              }
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa tài khoản này?"
+            onConfirm={() => {
+              dispatch(deleteUser(Number(record.userId)) as any);
             }}
+            okText="Có"
+            cancelText="Không"
           >
-            Delete
-          </Button>
+            <Tooltip title="Xóa">
+              <Button type="link" danger>
+                Delete
+              </Button>
+            </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },

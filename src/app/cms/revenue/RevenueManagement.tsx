@@ -16,10 +16,7 @@ import {
   DatePicker,
   Tag,
 } from "antd";
-import {
-  EyeOutlined,
-  FileDoneOutlined,
-} from "@ant-design/icons";
+import { EyeOutlined, FileDoneOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAdvertiments,
@@ -53,9 +50,11 @@ const RevenueManagement = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (user?.userId) {
-      if (user?.roleEntity?.roleCode === "admin")
-        return dispatch(getAdvertiments() as any);
-      dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+      (async () => {
+        if (user?.roleEntity?.roleCode === "admin")
+          return await dispatch(getAdvertiments() as any);
+        await dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+      })();
     }
   }, [user?.userId]);
 
@@ -118,7 +117,7 @@ const RevenueManagement = () => {
     setEditingAdId(record.advertisementId);
     form.setFieldsValue({
       ...record,
-      timeRange: [dayjs(record.startTime), dayjs(record.endTime)],
+      timeRange: [dayjs(record.startDate), dayjs(record.endDate)],
       advertisingFields: record.advertisingFields.map(
         (field) => field.advertisingFieldId
       ),

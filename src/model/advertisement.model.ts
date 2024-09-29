@@ -6,8 +6,8 @@ export interface INewAdvertisement {
   advertisementName: string;
   advertisementLink: string;
   advertisementPosition: string;
-  startTime: string;
-  endTime: string;
+  startDate: string;
+  endDate: string;
   price: number;
   status: Status;
   advertisingFields: [

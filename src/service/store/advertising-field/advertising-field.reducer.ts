@@ -62,8 +62,6 @@ const { actions, reducer } = createSlice({
     builder.addCase(
       getAdvertisingFields.fulfilled,
       (state, { payload }: PayloadAction<IAdvertisingField[]>) => {
-        console.log(payload);
-
         AdvertisingFieldAdapter.setAll(state as any, payload);
         state.initialState.loading = false;
       }

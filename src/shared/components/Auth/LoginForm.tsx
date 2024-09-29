@@ -8,6 +8,7 @@ import { RootState } from "@/service/store/reducers";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { setLoginMessageShown } from "@/service/store/auth/auth.reducer";
+import Logo from "@/shared/home/Logo";
 
 const validationSchema = Yup.object().shape({
   userName: Yup.string().required("Please input your username!"),
@@ -18,7 +19,7 @@ const validationSchema = Yup.object().shape({
 const initialValues = {
   userName: "",
   userPassword: "",
-  roleId: "8",
+  roleId: "1",
 };
 
 const LoginForm: React.FC = () => {
@@ -63,10 +64,19 @@ const LoginForm: React.FC = () => {
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <Logo />
+        </div>
         <h2
           style={{
             textAlign: "center",
-            marginBottom: "20px",
+            marginBottom: "16px",
             fontSize: "24px",
             fontWeight: "bold",
           }}
@@ -97,10 +107,10 @@ const LoginForm: React.FC = () => {
                     borderRadius: "4px",
                   }}
                 >
-                  <option style={{ cursor: "pointer" }} value="8">
+                  <option style={{ cursor: "pointer" }} value="1">
                     Admin
                   </option>
-                  <option style={{ cursor: "pointer" }} value="10">
+                  <option style={{ cursor: "pointer" }} value="2">
                     Nhà Quảng Cáo
                   </option>
                 </Field>

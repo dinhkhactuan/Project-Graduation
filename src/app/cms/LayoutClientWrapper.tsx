@@ -39,11 +39,11 @@ const LayoutClientWrapper = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     dispatch(getUserInfo() as any);
-  }, [dispatch]);
+  }, []);
 
   const handleLogout = () => {
-    dispatch(logout());
     toast.success("Đăng xuất thành công");
+    dispatch(logout());
     navigate.push("/login");
   };
   const handleProfile = () => {

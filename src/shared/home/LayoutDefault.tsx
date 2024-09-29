@@ -1,3 +1,4 @@
+"use client";
 import React, { ReactNode } from "react";
 import dynamic from "next/dynamic";
 const DynamicHeader1 = dynamic(() => import("./HeaderHome"), { ssr: false });
