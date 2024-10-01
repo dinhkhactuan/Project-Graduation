@@ -77,7 +77,7 @@ const LayoutClientWrapper = ({ children }: { children: ReactNode }) => {
                 style={{ fontSize: "16px", width: 64, height: 64 }}
               />
               <div style={{ display: "flex", alignItems: "center" }}>
-                <Link href={"/"} target="_blank">
+                <Link href={"/"}>
                   <Logo />
                 </Link>
               </div>

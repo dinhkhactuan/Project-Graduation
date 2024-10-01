@@ -40,6 +40,18 @@ export const getAdvertimentByUser = createAsyncThunk(
   }
 );
 
+export const getAdvertimentHome = createAsyncThunk(
+  `get-home-advertisement`,
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await axiosInstance.get(`/home/advertisement-approval`);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const createAdvertiment = createAsyncThunk(
   `createUser-advertisement`,
   async (body: any, thunkAPI) => {

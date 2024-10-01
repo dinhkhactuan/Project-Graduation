@@ -3,7 +3,11 @@
 import React, { useState } from "react";
 import { Layout, Menu, MenuProps, Tooltip } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloud, faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCloud,
+  faGear,
+  faRightToBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import SettingHome from "../components/SettingHome";
 import { useMenuItems } from "./itemsMenu.model";
 import Link from "next/link";
@@ -11,6 +15,8 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@/app//(provider)/ThemeProvider";
 import SearchHome from "./SearchHome";
 import Logo from "./Logo";
+import { RootState } from "@/service/store/reducers";
+import { useSelector } from "react-redux";
 
 const { Header } = Layout;
 
@@ -20,6 +26,7 @@ const HeaderHome = () => {
   const [current, setCurrent] = useState("mail");
   const { themeData, setCurrentTheme } = useTheme();
   const [currenTheme] = useState(themeData);
+  const { token } = useSelector((state: RootState) => state.auth);
 
   const onClick: MenuProps["onClick"] = (e) => {
     setCurrent(e.key);
@@ -77,11 +84,20 @@ const HeaderHome = () => {
             <Tooltip title={"Cài đặt"} className="mr-[14px]">
               <FontAwesomeIcon icon={faGear} size="xl" onClick={showModal} />
             </Tooltip>
-            <Tooltip title={"Đăng nhập"}>
-              <Link href={"/login"} target="_blank">
-                <FontAwesomeIcon icon={faUser} size="xl" />
-              </Link>
-            </Tooltip>
+            {!token && (
+              <Tooltip title={"Đăng nhập"}>
+                <Link href={"/login"} target="_blank">
+                  <FontAwesomeIcon icon={faUser} size="xl" />
+                </Link>
+              </Tooltip>
+            )}
+            {token && (
+              <Tooltip title={"Trang quản trị"}>
+                <Link href={"/cms/dashboard"}>
+                  <FontAwesomeIcon icon={faRightToBracket} size="xl" />
+                </Link>
+              </Tooltip>
+            )}
             <SettingHome
               handleCancel={handleCancel}
               handleOk={handleOk}
