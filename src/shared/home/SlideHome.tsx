@@ -2,12 +2,10 @@
 
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
-import { IAdvertisement, Status } from "@/model/advertisement.model";
+import { IAdvertisement } from "@/model/advertisement.model";
 import { useEffect } from "react";
 import {
   getAdvertimentHome,
-  getAdvertiments,
 } from "@/service/store/advertiment/advertiment.api";
 import { RootState } from "@/service/store/reducers";
 
