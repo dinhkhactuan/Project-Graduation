@@ -14,6 +14,7 @@ import {
   approvalAdvertiment,
   revenueAdvertiment,
   exportFileAdvertiment,
+  getAdvertimentHome,
 } from "./advertiment.api";
 import { RootState } from "../reducers";
 import { IResponse } from "@/shared/type/IResponse";
@@ -22,6 +23,7 @@ import { IAdvertisement } from "@/model/advertisement.model";
 interface IInitialAdvertisementState {
   loading: boolean;
   advertisement: IAdvertisement | null;
+  advertisementHome: IAdvertisement[];
   updateStatusUser: boolean;
   deleteStatusUser: boolean;
   approvalStatus: boolean;
@@ -37,6 +39,7 @@ const initialState: IInitialAdvertisementState = {
   deleteStatusUser: false,
   approvalStatus: false,
   revenue: null,
+  advertisementHome: [],
 };
 
 const advertisementAdapter = createEntityAdapter({
@@ -58,6 +61,7 @@ const { actions, reducer } = createSlice({
       state.initialState.updateStatusUser = false;
       state.initialState.deleteStatusUser = false;
       state.initialState.advertisement = null;
+      state.initialState.advertisementHome = [];
       state.initialState.errorMessage = null;
     },
     resetEntity(state) {
@@ -110,6 +114,22 @@ const { actions, reducer } = createSlice({
     );
     builder.addCase(
       getAdvertiment.rejected,
+      (state, { payload }: PayloadAction<any>) => {
+        state.initialState.errorMessage =
+          payload?.message || payload?.error || payload?.msg;
+        state.initialState.loading = false;
+      }
+    );
+
+    builder.addCase(
+      getAdvertimentHome.fulfilled,
+      (state, { payload }: PayloadAction<IResponse<IAdvertisement[]>>) => {
+        state.initialState.advertisementHome = payload.data;
+        state.initialState.loading = false;
+      }
+    );
+    builder.addCase(
+      getAdvertimentHome.rejected,
       (state, { payload }: PayloadAction<any>) => {
         state.initialState.errorMessage =
           payload?.message || payload?.error || payload?.msg;

@@ -5,22 +5,28 @@ import { Layout } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
 import { IAdvertisement, Status } from "@/model/advertisement.model";
-import { getAdvertiments } from "@/service/store/advertiment/advertiment.api";
+import {
+  getAdvertimentHome,
+  getAdvertiments,
+} from "@/service/store/advertiment/advertiment.api";
 import Image from "next/image";
+import { RootState } from "@/service/store/reducers";
 
 const { Footer } = Layout;
 
 const FooterHome = () => {
   const dispatch = useDispatch();
-  const banners = useSelector(advertisementSelectors.selectAll);
-  const bannerApproval = banners.filter(
+  const { advertisementHome } = useSelector(
+    (state: RootState) => state.advertiment.initialState
+  );
+  const bannerApproval = advertisementHome.filter(
     (item: IAdvertisement) =>
-      item.status === Status.APPROVED && item.advertisementPosition === "bottom"
+      item.status === Status.APPROVED && item.advertisementPosition === "footer"
   );
   const bannerSrc = bannerApproval[0]?.advertisementLink || "";
 
   useEffect(() => {
-    dispatch(getAdvertiments() as any);
+    dispatch(getAdvertimentHome() as any);
   }, [dispatch]);
   return (
     <Layout>

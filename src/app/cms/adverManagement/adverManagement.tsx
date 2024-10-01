@@ -23,6 +23,7 @@ import {
   DeleteOutlined,
   PlusOutlined,
   CreditCardOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -113,6 +114,13 @@ const AdManagement = () => {
       title: "Link",
       dataIndex: "advertisementLink",
       key: "advertisementLink",
+      render: (_: any, record: IAdvertisement) => {
+        return (
+          <a href={record?.advertisementLink ?? ""} target="_blank">
+            {record.advertisementLink}
+          </a>
+        );
+      },
       width: 100,
       ellipsis: true,
     },
@@ -173,7 +181,7 @@ const AdManagement = () => {
             record.status !== Status.APPROVED && (
               <Tooltip title="Gửi phê duyệt">
                 <Button
-                  icon={<EditOutlined />}
+                  icon={<FormOutlined />}
                   onClick={() => handleSendApproval(record)}
                 ></Button>
               </Tooltip>
@@ -267,6 +275,7 @@ const AdManagement = () => {
             (id: number) => id
           ),
           price: String(values.price),
+          userId: user?.userId,
         };
         dispatch(createAdvertiment(newAd) as any);
       } else {
