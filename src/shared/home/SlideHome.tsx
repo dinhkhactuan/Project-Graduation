@@ -17,7 +17,7 @@ const SlideHome = () => {
 
   useEffect(() => {
     dispatch(getAdvertiments() as any);
-  }, [dispatch]);
+  }, []);
 
   if (bannerApproval.length === 0) {
     return null;

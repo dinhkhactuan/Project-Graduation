@@ -16,6 +16,7 @@ import {
   DatePicker,
   Tag,
   Tooltip,
+  Popconfirm,
 } from "antd";
 import {
   EditOutlined,
@@ -32,22 +33,30 @@ import {
   getAdvertimentByUser,
   revenueAdvertiment,
 } from "@/service/store/advertiment/advertiment.api";
-import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
+import {
+  advertisementSelectors,
+  resetEntity,
+} from "@/service/store/advertiment/advertiment.reducer";
 import { IAdvertisement, Status } from "@/model/advertisement.model";
 import dayjs from "dayjs";
 import { RootState } from "@/service/store/reducers";
 import { createPayment } from "@/service/store/vnpay/vnpay.api";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const AdManagement = () => {
   const ads = useSelector(advertisementSelectors.selectAll);
+  const { updateStatusUser, deleteStatusUser } = useSelector(
+    (state: RootState) => state.advertiment.initialState
+  );
   const { user } = useSelector((state: RootState) => state.user.initialState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editingAdId, setEditingAdId] = useState<number | null>(null);
   const [urlPayment, setUrlPayment] = useState<string>("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (urlPayment) {
@@ -59,13 +68,45 @@ const AdManagement = () => {
       document.body.removeChild(a);
     }
   }, [urlPayment]);
-  const dispatch = useDispatch();
+
   useEffect(() => {
-    if (user?.roleEntity?.roleCode === "admin")
-      return dispatch(getAdvertiments() as any);
-    dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+    const fetchData = async () => {
+      if (user?.roleEntity?.roleCode === "admin") {
+        await dispatch(getAdvertiments() as any);
+      } else {
+        await dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+      }
+    };
+    fetchData();
   }, [user?.userId]);
 
+  useEffect(() => {
+    if (updateStatusUser) {
+      toast.success(
+        `${editingAdId ? "Chỉnh sửa" : "Tạo mới"} quảng cáo thành công`
+      );
+      dispatch(resetEntity());
+      setIsModalVisible(false);
+      (async () => {
+        if (user?.roleEntity?.roleCode === "admin")
+          return await dispatch(getAdvertiments() as any);
+        await dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+      })();
+    }
+  }, [updateStatusUser]);
+
+  useEffect(() => {
+    if (deleteStatusUser) {
+      toast.success(`Xóa quảng cáo thành công`);
+      dispatch(resetEntity());
+      setIsModalVisible(false);
+      (async () => {
+        if (user?.roleEntity?.roleCode === "admin")
+          return await dispatch(getAdvertiments() as any);
+        await dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+      })();
+    }
+  }, [deleteStatusUser]);
   const columns = [
     { title: "Name", dataIndex: "advertisementName", key: "advertisementName" },
     {
@@ -82,14 +123,14 @@ const AdManagement = () => {
     },
     {
       title: "Start Date",
-      dataIndex: "startTime",
-      key: "startTime",
+      dataIndex: "startDate",
+      key: "startDate",
       render: (text: string) => dayjs(text).format("YYYY-MM-DD"),
     },
     {
       title: "End Date",
-      dataIndex: "endTime",
-      key: "endTime",
+      dataIndex: "endDate",
+      key: "endDate",
       render: (text: string) => dayjs(text).format("YYYY-MM-DD"),
     },
     {
@@ -115,7 +156,7 @@ const AdManagement = () => {
       key: "advertisingFields",
       render: (
         fields: { advertisingFieldId: number; advertisingFieldName: string }[]
-      ) => fields.map((field) => field.advertisingFieldName).join(", "),
+      ) => fields.map((field) => field?.advertisingFieldName).join(", "),
     },
     {
       title: "Action",
@@ -137,21 +178,25 @@ const AdManagement = () => {
                 ></Button>
               </Tooltip>
             )}
-          {record.status === Status.APPROVED && (
-            <Tooltip title="Thanh toán">
-              <Button
-                icon={<CreditCardOutlined />}
-                onClick={() => handlePayment(record)}
-              ></Button>
+          {user?.roleEntity?.roleCode === "user" &&
+            record.status === Status.APPROVED && (
+              <Tooltip title="Thanh toán">
+                <Button
+                  icon={<CreditCardOutlined />}
+                  onClick={() => handlePayment(record)}
+                ></Button>
+              </Tooltip>
+            )}
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa quảng cáo này?"
+            onConfirm={() => handleDelete(record.advertisementId)}
+            okText="Có"
+            cancelText="Không"
+          >
+            <Tooltip title="Xóa">
+              <Button icon={<DeleteOutlined />} danger></Button>
             </Tooltip>
-          )}
-          <Tooltip title="Xóa">
-            <Button
-              icon={<DeleteOutlined />}
-              onClick={() => handleDelete(record.advertisementId)}
-              danger
-            ></Button>
-          </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -184,9 +229,9 @@ const AdManagement = () => {
     setEditingAdId(record.advertisementId);
     form.setFieldsValue({
       ...record,
-      timeRange: [dayjs(record.startTime), dayjs(record.endTime)],
+      timeRange: [dayjs(record.startDate), dayjs(record.endDate)],
       advertisingFields: record.advertisingFields.map(
-        (field) => field.advertisingFieldId
+        (field) => field?.advertisingFieldId
       ),
     });
     setIsModalVisible(true);
@@ -196,9 +241,9 @@ const AdManagement = () => {
     setEditingAdId(record.advertisementId);
     form.setFieldsValue({
       ...record,
-      timeRange: [dayjs(record.startTime), dayjs(record.endTime)],
-      advertisingFields: record.advertisingFields.map(
-        (field) => field.advertisingFieldId
+      timeRange: [dayjs(record.startDate), dayjs(record.endDate)],
+      advertisingFields: record?.advertisingFields?.map(
+        (field) => field?.advertisingFieldId
       ),
     });
     setIsModalVisible(true);
@@ -210,27 +255,34 @@ const AdManagement = () => {
 
   const handleModalOk = () => {
     form.validateFields().then((values) => {
-      const [startTime, endTime] = values.timeRange;
-      const newAd: IAdvertisement = {
-        ...values,
-        startTime: startTime.format("YYYY-MM-DD"),
-        endTime: endTime.format("YYYY-MM-DD"),
-        status: Status.PENDING,
-        advertisementId:
-          editingAdId ||
-          Math.max(...ads.map((ad) => ad.advertisementId), 0) + 1,
-        advertisingFields: values.advertisingFields.map((id: number) => {
-          return {
-            advertisingFieldId: id,
-            advertisingFieldName: id === 1 ? "Dien tu" : "Co khi",
-          };
-        }),
-      };
-
+      const [startTime, endTime] = values?.timeRange;
       if (editingAdId === null) {
+        const newAd: any = {
+          advertisementName: values.advertisementName,
+          advertisementLink: values.advertisementLink,
+          advertisementPosition: values.advertisementPosition,
+          startDate: startTime.format("YYYY-MM-DD"),
+          endDate: endTime.format("YYYY-MM-DD"),
+          advertisingFieldIds: values?.advertisingFields?.map(
+            (id: number) => id
+          ),
+          price: String(values.price),
+        };
         dispatch(createAdvertiment(newAd) as any);
       } else {
-        dispatch(updateAdvertiment(newAd) as any);
+        const Ad: any = {
+          advertisementName: values.advertisementName,
+          advertisementLink: values.advertisementLink,
+          advertisementPosition: values.advertisementPosition,
+          startDate: startTime.format("YYYY-MM-DD"),
+          endDate: endTime.format("YYYY-MM-DD"),
+          price: String(values.price),
+          advertisementId:
+            editingAdId ||
+            Math.max(...ads.map((ad) => ad.advertisementId), 0) + 1,
+          advertisingFieldIds: values.advertisingFields.map((id: number) => id),
+        };
+        dispatch(updateAdvertiment(Ad) as any);
       }
       setIsModalVisible(false);
     });
@@ -312,7 +364,7 @@ const AdManagement = () => {
             <RangePicker />
           </Form.Item>
           <Form.Item name="price" label="Price" rules={[{ required: true }]}>
-            <InputNumber min={0} prefix="$" />
+            <InputNumber min={0} prefix="vnđ" />
           </Form.Item>
           <Form.Item
             name="advertisingFields"

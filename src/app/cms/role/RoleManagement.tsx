@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Table, Button, Modal } from "antd";
+import { Table, Button, Modal, Popconfirm, Tooltip } from "antd";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,13 +74,10 @@ const RoleManagement: React.FC = () => {
     setSubmitting(false);
     setIsModalVisible(false);
     setEditingRole(null);
-    toast.success(`Role ${editingRole ? "Cập nhật" : "Tạo mới"} Thành công`);
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa")) {
-      dispatch(deleteRole(Number(id)) as any);
-    }
+    dispatch(deleteRole(Number(id)) as any);
   };
 
   const columns = [
@@ -119,13 +116,20 @@ const RoleManagement: React.FC = () => {
           <Button type="link" onClick={() => showModal(record)}>
             Edit
           </Button>
-          <Button
-            type="link"
-            danger
-            onClick={() => handleDelete(record.roleId)}
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa tài khoản này?"
+            onConfirm={() => {
+              handleDelete(record.roleId);
+            }}
+            okText="Có"
+            cancelText="Không"
           >
-            Delete
-          </Button>
+            <Tooltip title="Xóa">
+              <Button type="link" danger>
+                Delete
+              </Button>
+            </Tooltip>
+          </Popconfirm>
         </span>
       ),
     },

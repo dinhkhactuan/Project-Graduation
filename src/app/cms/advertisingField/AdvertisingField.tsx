@@ -39,8 +39,10 @@ const AdvertisingFieldManagement = () => {
   );
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAdvertisingFields() as any);
-  }, [dispatch]);
+    (async () => {
+      await dispatch(getAdvertisingFields() as any);
+    })();
+  }, []);
 
   useEffect(() => {
     if (updateStatusUser) {
@@ -51,7 +53,9 @@ const AdvertisingFieldManagement = () => {
             : "Thêm mới lĩnh vực quảng cáo thành công"
         }`
       );
-      dispatch(getAdvertisingFields() as any);
+      (async () => {
+        await dispatch(getAdvertisingFields() as any);
+      })();
       dispatch(resetEntity());
     }
   }, [updateStatusUser]);
@@ -106,7 +110,7 @@ const AdvertisingFieldManagement = () => {
     setIsModalVisible(true);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = (id: number) => {
     dispatch(deleteAdvertisingField(id) as any);
   };
 

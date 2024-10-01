@@ -1,7 +1,5 @@
-import dynamic from "next/dynamic";
-const AdManagement = dynamic(() => import("./adverManagement"), {
-  ssr: false,
-});
+import AdManagement from "./adverManagement";
+
 const AdverManagement = () => {
   return (
     <>

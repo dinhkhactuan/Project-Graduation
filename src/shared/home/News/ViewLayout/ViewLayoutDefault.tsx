@@ -16,7 +16,7 @@ const ViewLayoutDefault = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const banners = useSelector(advertisementSelectors.selectAll);
-  const bannerApproval = banners.filter(
+  const bannerApproval = banners?.filter(
     (item: IAdvertisement) =>
       item.status === Status.APPROVED && item.advertisementPosition === "right"
   );
@@ -89,24 +89,28 @@ const ViewLayoutDefault = () => {
               />
             </div>
 
-            <div className="w-2/7">
-              {bannerApproval.length > 0 && (
-                <Banner
-                  height={650}
-                  src={bannerApproval[0].advertisementLink}
-                />
-              )}
-              {bannerApproval.length > 1 && (
-                <div className="mt-[20px]">
+            {bannerApproval.length > 0 && (
+              <div className="w-2/7">
+                {bannerApproval.length > 0 && (
                   <Banner
                     height={650}
-                    src={bannerApproval[1].advertisementLink}
+                    src={bannerApproval[0].advertisementLink}
                   />
-                </div>
-              )}
+                )}
+                {bannerApproval.length > 1 && (
+                  <div className="mt-[20px]">
+                    <Banner
+                      height={650}
+                      src={bannerApproval[1].advertisementLink}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            <div style={{ width: "36%" }}>
               {bannerApproval.length === 0 && (
                 <LeftNews
-                  datas={getArticleSegment(processedNews, 50, 56)}
+                  datas={getArticleSegment(processedNews, 48, 56)}
                   size={8}
                   classname="md:border-r md:border-gray-200"
                 />
