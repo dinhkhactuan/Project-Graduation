@@ -92,7 +92,7 @@ export const requestApprovalAdvertiment = createAsyncThunk(
   `request-approval-advertisement`,
   async (id: number, thunkAPI) => {
     try {
-      const { data } = await axiosInstance.put(
+      const { data } = await axiosInstance.post(
         `${prefix}/${id}/request-approval`
       );
       return data;

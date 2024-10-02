@@ -187,14 +187,28 @@ const AdManagement = () => {
       key: "action",
       render: (_: any, record: IAdvertisement) => (
         <Space size="middle">
-          <Tooltip title="Chỉnh sửa">
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => handleEdit(record)}
-            ></Button>
-          </Tooltip>
+          {user?.roleEntity?.roleCode === "admin" && (
+            <Tooltip title="Chỉnh sửa">
+              <Button
+                icon={<EditOutlined />}
+                onClick={() => handleEdit(record)}
+              ></Button>
+            </Tooltip>
+          )}
+
+          {record.status !== Status.APPROVED &&
+            user?.roleEntity?.roleCode === "user" && (
+              <Tooltip title="Chỉnh sửa">
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() => handleEdit(record)}
+                ></Button>
+              </Tooltip>
+            )}
+
           {user?.roleEntity?.roleCode === "user" &&
-            record.status !== Status.APPROVED && (
+            record.status !== Status.APPROVED &&
+            record.advertisementId !== requestAdver && (
               <Popconfirm
                 title="Bạn có chắc chắn muốn gửi phê duyệt quảng cáo này?"
                 onConfirm={() => {
@@ -314,6 +328,7 @@ const AdManagement = () => {
             editingAdId ||
             Math.max(...ads.map((ad) => ad.advertisementId), 0) + 1,
           advertisingFieldIds: values.advertisingFields.map((id: number) => id),
+          userId: user?.roleEntity?.roleCode === "admin" ? null : user?.userId,
         };
         dispatch(updateAdvertiment(Ad) as any);
       }
@@ -386,6 +401,7 @@ const AdManagement = () => {
             <Select>
               <Option value="center">Center</Option>
               <Option value="sidebar">Sidebar</Option>
+              <Option value="right">right</Option>
               <Option value="footer">Footer</Option>
             </Select>
           </Form.Item>
