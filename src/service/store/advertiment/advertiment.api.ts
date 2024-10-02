@@ -75,12 +75,26 @@ export const updateAdvertiment = createAsyncThunk(
     }
   }
 );
-
+//phê duyệt
 export const approvalAdvertiment = createAsyncThunk(
   `approval-advertisement`,
   async (id: number, thunkAPI) => {
     try {
       const { data } = await axiosInstance.put(`${prefix}/${id}/approve`);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+// gửi phê duyệt
+export const requestApprovalAdvertiment = createAsyncThunk(
+  `request-approval-advertisement`,
+  async (id: number, thunkAPI) => {
+    try {
+      const { data } = await axiosInstance.put(
+        `${prefix}/${id}/request-approval`
+      );
       return data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);
