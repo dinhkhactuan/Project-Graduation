@@ -15,6 +15,7 @@ import {
   revenueAdvertiment,
   exportFileAdvertiment,
   getAdvertimentHome,
+  requestApprovalAdvertiment,
 } from "./advertiment.api";
 import { RootState } from "../reducers";
 import { IResponse } from "@/shared/type/IResponse";
@@ -29,6 +30,7 @@ interface IInitialAdvertisementState {
   approvalStatus: boolean;
   errorMessage: string | null;
   revenue: null;
+  isRequestApproval: boolean;
 }
 
 const initialState: IInitialAdvertisementState = {
@@ -38,6 +40,7 @@ const initialState: IInitialAdvertisementState = {
   advertisement: null,
   deleteStatusUser: false,
   approvalStatus: false,
+  isRequestApproval: false,
   revenue: null,
   advertisementHome: [],
 };
@@ -60,6 +63,7 @@ const { actions, reducer } = createSlice({
       state.initialState.approvalStatus = false;
       state.initialState.updateStatusUser = false;
       state.initialState.deleteStatusUser = false;
+      state.initialState.isRequestApproval = false;
       state.initialState.advertisement = null;
       state.initialState.advertisementHome = [];
       state.initialState.errorMessage = null;
@@ -67,6 +71,7 @@ const { actions, reducer } = createSlice({
     resetEntity(state) {
       state.initialState.updateStatusUser = false;
       state.initialState.deleteStatusUser = false;
+      state.initialState.isRequestApproval = false;
       state.initialState.approvalStatus = false;
       state.initialState.loading = false;
       state.initialState.errorMessage = null;
@@ -184,6 +189,23 @@ const { actions, reducer } = createSlice({
           payload?.message || payload?.error || payload?.msg;
         state.initialState.loading = false;
         state.initialState.approvalStatus = false;
+      }
+    );
+
+    builder.addCase(
+      requestApprovalAdvertiment.fulfilled,
+      (state, { payload }: PayloadAction<IResponse<any>>) => {
+        state.initialState.loading = false;
+        state.initialState.isRequestApproval = true;
+      }
+    );
+    builder.addCase(
+      requestApprovalAdvertiment.rejected,
+      (state, { payload }: PayloadAction<any>) => {
+        state.initialState.errorMessage =
+          payload?.message || payload?.error || payload?.msg;
+        state.initialState.loading = false;
+        state.initialState.isRequestApproval = false;
       }
     );
 

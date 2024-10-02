@@ -33,6 +33,7 @@ import {
   deleteAdvertiment,
   getAdvertimentByUser,
   revenueAdvertiment,
+  requestApprovalAdvertiment,
 } from "@/service/store/advertiment/advertiment.api";
 import {
   advertisementSelectors,
@@ -49,13 +50,14 @@ const { RangePicker } = DatePicker;
 
 const AdManagement = () => {
   const ads = useSelector(advertisementSelectors.selectAll);
-  const { updateStatusUser, deleteStatusUser } = useSelector(
+  const { updateStatusUser, deleteStatusUser, isRequestApproval } = useSelector(
     (state: RootState) => state.advertiment.initialState
   );
   const { user } = useSelector((state: RootState) => state.user.initialState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editingAdId, setEditingAdId] = useState<number | null>(null);
+  const [requestAdver, setRequestAdver] = useState<number | null>(null);
   const [urlPayment, setUrlPayment] = useState<string>("");
   const dispatch = useDispatch();
 
@@ -108,6 +110,20 @@ const AdManagement = () => {
       })();
     }
   }, [deleteStatusUser]);
+
+  useEffect(() => {
+    if (isRequestApproval) {
+      toast.success(`Gửi phê duyệt quảng cáo thành công`);
+      dispatch(resetEntity());
+      setIsModalVisible(false);
+      (async () => {
+        if (user?.roleEntity?.roleCode === "admin")
+          return await dispatch(getAdvertiments() as any);
+        await dispatch(getAdvertimentByUser(Number(user?.userId)) as any);
+      })();
+    }
+  }, [isRequestApproval]);
+
   const columns = [
     { title: "Name", dataIndex: "advertisementName", key: "advertisementName" },
     {
@@ -171,20 +187,40 @@ const AdManagement = () => {
       key: "action",
       render: (_: any, record: IAdvertisement) => (
         <Space size="middle">
-          <Tooltip title="Chỉnh sửa">
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => handleEdit(record)}
-            ></Button>
-          </Tooltip>
-          {user?.roleEntity?.roleCode === "user" &&
-            record.status !== Status.APPROVED && (
-              <Tooltip title="Gửi phê duyệt">
+          {user?.roleEntity?.roleCode === "admin" && (
+            <Tooltip title="Chỉnh sửa">
+              <Button
+                icon={<EditOutlined />}
+                onClick={() => handleEdit(record)}
+              ></Button>
+            </Tooltip>
+          )}
+
+          {record.status !== Status.APPROVED &&
+            user?.roleEntity?.roleCode === "user" && (
+              <Tooltip title="Chỉnh sửa">
                 <Button
-                  icon={<FormOutlined />}
-                  onClick={() => handleSendApproval(record)}
+                  icon={<EditOutlined />}
+                  onClick={() => handleEdit(record)}
                 ></Button>
               </Tooltip>
+            )}
+
+          {user?.roleEntity?.roleCode === "user" &&
+            record.status !== Status.APPROVED &&
+            record.advertisementId !== requestAdver && (
+              <Popconfirm
+                title="Bạn có chắc chắn muốn gửi phê duyệt quảng cáo này?"
+                onConfirm={() => {
+                  handleSendApproval(record);
+                }}
+                okText="Có"
+                cancelText="Không"
+              >
+                <Tooltip title="Gửi phê duyệt">
+                  <Button icon={<FormOutlined />}></Button>
+                </Tooltip>
+              </Popconfirm>
             )}
           {user?.roleEntity?.roleCode === "user" &&
             record.status === Status.APPROVED && (
@@ -246,7 +282,7 @@ const AdManagement = () => {
   };
 
   const handleSendApproval = (record: IAdvertisement) => {
-    setEditingAdId(record.advertisementId);
+    setRequestAdver(record.advertisementId);
     form.setFieldsValue({
       ...record,
       timeRange: [dayjs(record.startDate), dayjs(record.endDate)],
@@ -264,7 +300,7 @@ const AdManagement = () => {
   const handleModalOk = () => {
     form.validateFields().then((values) => {
       const [startTime, endTime] = values?.timeRange;
-      if (editingAdId === null) {
+      if (editingAdId === null && requestAdver === null) {
         const newAd: any = {
           advertisementName: values.advertisementName,
           advertisementLink: values.advertisementLink,
@@ -278,6 +314,8 @@ const AdManagement = () => {
           userId: user?.userId,
         };
         dispatch(createAdvertiment(newAd) as any);
+      } else if (requestAdver && editingAdId === null) {
+        dispatch(requestApprovalAdvertiment(requestAdver) as any);
       } else {
         const Ad: any = {
           advertisementName: values.advertisementName,
@@ -290,6 +328,7 @@ const AdManagement = () => {
             editingAdId ||
             Math.max(...ads.map((ad) => ad.advertisementId), 0) + 1,
           advertisingFieldIds: values.advertisingFields.map((id: number) => id),
+          userId: user?.roleEntity?.roleCode === "admin" ? null : user?.userId,
         };
         dispatch(updateAdvertiment(Ad) as any);
       }
@@ -362,6 +401,7 @@ const AdManagement = () => {
             <Select>
               <Option value="center">Center</Option>
               <Option value="sidebar">Sidebar</Option>
+              <Option value="right">right</Option>
               <Option value="footer">Footer</Option>
             </Select>
           </Form.Item>

@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       key: "/cms/dashboard",
       icon: <DashboardOutlined />,
       label: "Tổng quan",
-      roles: ["admin", "user"],
+      roles: ["admin"],
     },
     {
       key: "/cms/userManagement",
@@ -72,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       key: "/cms/revenue",
       icon: <ShoppingCartOutlined />,
       label: "Doanh thu",
-      roles: ["admin", "user"],
+      roles: ["admin"],
     },
     {
       key: "/cms/role",
