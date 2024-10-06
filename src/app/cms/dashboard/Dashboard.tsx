@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { Row, Col, Card, Statistic, Table, Typography, Progress } from "antd";
 import {
   ArrowUpOutlined,
@@ -8,7 +8,7 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
   DollarOutlined,
-  FileOutlined,
+  ExceptionOutlined,
 } from "@ant-design/icons";
 import {
   LineChart,
@@ -19,26 +19,35 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { userSelectors } from "@/service/store/user/user.reducers";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsers } from "@/service/store/user/user.api";
+import { advertisementSelectors } from "@/service/store/advertiment/advertiment.reducer";
+import { getAdvertiments } from "@/service/store/advertiment/advertiment.api";
+import { IAdvertisement, Status } from "@/model/advertisement.model";
+import axiosInstance from "@/service/config/axios-interceptor";
+import { IRevenue } from "@/model/revenue.model";
 
 const { Title } = Typography;
 
-// Dữ liệu mẫu cho biểu đồ
-const chartData = [
-  { name: "Jan", value: 400 },
-  { name: "Feb", value: 300 },
-  { name: "Mar", value: 550 },
-  { name: "Apr", value: 450 },
-  { name: "May", value: 650 },
-  { name: "Jun", value: 700 },
-];
+export function calculateTotalRevenue(data: any) {
+  if (!data || !Array.isArray(data)) {
+    return "Dữ liệu không hợp lệ";
+  }
 
-// Dữ liệu mẫu cho bảng
-const tableData = [
-  { key: 1, product: "Sản phẩm A", sales: 32, revenue: 3200 },
-  { key: 2, product: "Sản phẩm B", sales: 28, revenue: 4200 },
-  { key: 3, product: "Sản phẩm C", sales: 45, revenue: 5600 },
-  { key: 4, product: "Sản phẩm D", sales: 20, revenue: 2800 },
-];
+  const totalRevenue = data.reduce((sum: any, item: any) => {
+    return sum + Number(item.amount);
+  }, 0);
+
+  const roundedTotal = Number(totalRevenue.toFixed(2));
+
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(roundedTotal);
+}
 
 const columns = [
   {
@@ -47,19 +56,57 @@ const columns = [
     key: "product",
   },
   {
-    title: "Số lượng bán",
+    title: "Vị trí",
     dataIndex: "sales",
     key: "sales",
   },
   {
-    title: "Doanh thu",
+    title: "Giá quảng cáo",
     dataIndex: "revenue",
     key: "revenue",
-    render: (text: number) => `$${text}`,
+    render: (text: number) => `${text} VNĐ`,
   },
 ];
 
+const convertChart = (advertiments: IAdvertisement[]) => {
+  const data = advertiments.map((item, index) => {
+    return {
+      name: item.advertisementName,
+      value: item.price,
+    };
+  });
+  return data;
+};
+
+const convertData = (advertiments: IAdvertisement[]) => {
+  const data = advertiments.map((item, index) => {
+    return {
+      key: index,
+      product: item.advertisementName,
+      sales: item.advertisementPosition,
+      revenue: item.price,
+    };
+  });
+  return data;
+};
 const Dashboard: React.FC = () => {
+  const dispatch = useDispatch();
+  const users = useSelector(userSelectors.selectAll);
+  const advertiments = useSelector(advertisementSelectors.selectAll);
+  const [revenues, setRevenues] = useState<IRevenue[]>([]);
+  console.log(advertiments);
+
+  useEffect(() => {
+    dispatch(getUsers() as any);
+    dispatch(getAdvertiments() as any);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const response = await axiosInstance.get("/revenue");
+      setRevenues(response.data?.data);
+    })();
+  }, []);
   return (
     <div style={{ padding: "24px" }}>
       <Title level={2}>Tổng quan</Title>
@@ -68,7 +115,7 @@ const Dashboard: React.FC = () => {
           <Card>
             <Statistic
               title="Người dùng mới"
-              value={1128}
+              value={users.length}
               prefix={<UserOutlined />}
               valueStyle={{ color: "#3f8600" }}
             />
@@ -77,8 +124,11 @@ const Dashboard: React.FC = () => {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Đơn hàng"
-              value={593}
+              title="Quảng cáo chưa phê duyệt"
+              value={
+                advertiments?.filter((item) => item.status === Status.PENDING)
+                  .length
+              }
               prefix={<ShoppingCartOutlined />}
               valueStyle={{ color: "#cf1322" }}
             />
@@ -88,7 +138,7 @@ const Dashboard: React.FC = () => {
           <Card>
             <Statistic
               title="Doanh thu"
-              value={15800}
+              value={calculateTotalRevenue(revenues)}
               prefix={<DollarOutlined />}
               valueStyle={{ color: "#3f8600" }}
             />
@@ -96,7 +146,14 @@ const Dashboard: React.FC = () => {
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="Báo cáo" value={24} prefix={<FileOutlined />} />
+            <Statistic
+              title="Quảng cáo đã phê duyệt"
+              value={
+                advertiments?.filter((item) => item.status === Status.APPROVED)
+                  .length
+              }
+              prefix={<ExceptionOutlined />}
+            />
           </Card>
         </Col>
       </Row>
@@ -105,7 +162,7 @@ const Dashboard: React.FC = () => {
         <Col span={12}>
           <Card title="Doanh thu theo tháng">
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={chartData}>
+              <LineChart data={convertChart(advertiments)}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
@@ -118,7 +175,7 @@ const Dashboard: React.FC = () => {
         <Col span={12}>
           <Card title="Top sản phẩm bán chạy">
             <Table
-              dataSource={tableData}
+              dataSource={convertData(advertiments)}
               columns={columns}
               pagination={false}
             />
@@ -152,7 +209,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="Tỷ lệ hủy đơn hàng">
+          <Card title="Tỷ lệ hủy">
             <Statistic
               title="Giảm"
               value={3.3}

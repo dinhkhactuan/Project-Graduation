@@ -42,7 +42,10 @@ import {
 import { IAdvertisement, Status } from "@/model/advertisement.model";
 import dayjs from "dayjs";
 import { RootState } from "@/service/store/reducers";
-import { createPayment } from "@/service/store/vnpay/vnpay.api";
+import {
+  createPayment,
+  getStatusPayment,
+} from "@/service/store/vnpay/vnpay.api";
 import { toast } from "react-toastify";
 
 const { Option } = Select;
@@ -72,6 +75,11 @@ const AdManagement = () => {
     }
   }, [urlPayment]);
 
+  // useEffect(() => {
+  //   dispatch(getStatusPayment() as any).then((data: any) => {
+  //     console.log(data);
+  //   });
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       if (user?.roleEntity?.roleCode === "admin") {
@@ -125,6 +133,12 @@ const AdManagement = () => {
   }, [isRequestApproval]);
 
   const columns = [
+    {
+      title: "STT",
+      key: "index",
+      render: (_: any, __: any, index: number) => index + 1,
+      width: 70,
+    },
     { title: "Name", dataIndex: "advertisementName", key: "advertisementName" },
     {
       title: "Link",
@@ -174,14 +188,14 @@ const AdManagement = () => {
         </Tag>
       ),
     },
-    {
-      title: "Fields",
-      dataIndex: "advertisingFields",
-      key: "advertisingFields",
-      render: (
-        fields: { advertisingFieldId: number; advertisingFieldName: string }[]
-      ) => fields.map((field) => field?.advertisingFieldName).join(", "),
-    },
+    // {
+    //   title: "Fields",
+    //   dataIndex: "advertisingFields",
+    //   key: "advertisingFields",
+    //   render: (
+    //     fields: { advertisingFieldId: number; advertisingFieldName: string }[]
+    //   ) => fields.map((field) => field?.advertisingFieldName).join(", "),
+    // },
     {
       title: "Action",
       key: "action",
@@ -256,10 +270,11 @@ const AdManagement = () => {
     dispatch(revenueAdvertiment(record.advertisementId) as any).then(
       (data: any) => {
         const revenue = data.payload?.data;
-        const amount = Number(revenue.amount.toString().replace(/[,.]/g, ""));
+        const amount = Number(revenue.amount);
+        const amountInVND = Math.round(amount * 100);
         dispatch(
           createPayment({
-            amount: amount,
+            amount: amountInVND,
             orderInfo: `Thanh toán ${record.advertisementName}`,
           }) as any
         ).then((data: any) => {

@@ -19,9 +19,10 @@ export const THEME_DATA_TWO: Theme = {
   colorTextTitleCapability: "#0f6c32",
   colorBorderCapability: "#0f6c32",
   colorBgSlideCompany: "#005690",
+  bgColor: "#ffc264",
 };
 export const THEME_DATA_THREE: Theme = {
-  colorPrimary: "#8E8E8E",
+  colorPrimary: "#fff",
   colorTextPrimary: "#212529",
   colorTextSecondary: "#8E8E8E",
   colorInfoBg: "#F5F5F5",
@@ -29,4 +30,5 @@ export const THEME_DATA_THREE: Theme = {
   colorTextTitleCapability: "#8E8E8E",
   colorBorderCapability: "#8E8E8E",
   colorBgSlideCompany: "#005690",
+  bgColor: "#64c5ff",
 };

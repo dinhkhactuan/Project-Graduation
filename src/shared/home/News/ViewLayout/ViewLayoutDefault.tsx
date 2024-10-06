@@ -8,24 +8,12 @@ import { LatestNews } from "@/service/store/news/news.api";
 import { getArticleSegment, processRSSData } from "@/shared/utils/ultils";
 import { useDispatch, useSelector } from "react-redux";
 import { IAdvertisement } from "@/model/advertisement.model";
-import {
-  getAdvertimentHome,
-} from "@/service/store/advertiment/advertiment.api";
+import { getAdvertimentHome } from "@/service/store/advertiment/advertiment.api";
 import { RootState } from "@/service/store/reducers";
 
 const ViewLayoutDefault = () => {
   const [processedNews, setProcessedNews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
-  const { advertisementHome } = useSelector(
-    (state: RootState) => state.advertiment.initialState
-  );
-  const bannerApproval = advertisementHome?.filter(
-    (item: IAdvertisement) => item.advertisementPosition === "right"
-  );
-  useEffect(() => {
-    dispatch(getAdvertimentHome() as any);
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,32 +80,12 @@ const ViewLayoutDefault = () => {
               />
             </div>
 
-            {bannerApproval.length > 0 && (
-              <div className="w-2/7">
-                {bannerApproval.length > 0 && (
-                  <Banner
-                    height={650}
-                    src={bannerApproval[0].advertisementLink}
-                  />
-                )}
-                {bannerApproval.length > 1 && (
-                  <div className="mt-[20px]">
-                    <Banner
-                      height={650}
-                      src={bannerApproval[1].advertisementLink}
-                    />
-                  </div>
-                )}
-              </div>
-            )}
             <div style={{ width: "36%" }}>
-              {bannerApproval.length === 0 && (
-                <LeftNews
-                  datas={getArticleSegment(processedNews, 48, 56)}
-                  size={8}
-                  classname="md:border-r md:border-gray-200"
-                />
-              )}
+              <LeftNews
+                datas={getArticleSegment(processedNews, 48, 56)}
+                size={8}
+                classname="md:border-r md:border-gray-200"
+              />
             </div>
           </div>
 

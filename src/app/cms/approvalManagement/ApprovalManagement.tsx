@@ -6,7 +6,10 @@ import { ColumnsType } from "antd/es/table";
 import { IApproval } from "@/model/Approval.model";
 import { Status } from "@/model/advertisement.model";
 import { useDispatch, useSelector } from "react-redux";
-import { getApprovals } from "@/service/store/approval/approval.api";
+import {
+  deleteApproval,
+  getApprovals,
+} from "@/service/store/approval/approval.api";
 import { ApprovalSelectors } from "@/service/store/approval/approval.reducer";
 import { approvalAdvertiment } from "@/service/store/advertiment/advertiment.api";
 import { RootState } from "@/service/store/reducers";
@@ -18,6 +21,9 @@ const ApprovalManagement = () => {
   const approvals = useSelector(ApprovalSelectors.selectAll);
   const { approvalStatus } = useSelector(
     (state: RootState) => state.advertiment.initialState
+  );
+  const { deleteStatus } = useSelector(
+    (state: RootState) => state.approval.initialState
   );
   const fetchApprovals = useCallback(() => {
     dispatch(getApprovals() as any);
@@ -35,7 +41,17 @@ const ApprovalManagement = () => {
     }
   }, [approvalStatus]);
 
-  const handleDelete = (id: number) => {};
+  useEffect(() => {
+    if (deleteStatus) {
+      toast.success("Xóa thành công");
+      dispatch(resetEntity());
+      fetchApprovals();
+    }
+  }, [deleteStatus]);
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteApproval(id) as any);
+  };
 
   const handleApprove = (id: number) => {
     dispatch(approvalAdvertiment(id) as any);

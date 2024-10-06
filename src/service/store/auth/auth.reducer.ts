@@ -10,6 +10,7 @@ interface IInitialAuthState {
   loginSuccess: boolean;
   logoutSuccess: boolean;
   hasShownLoginMessage: boolean;
+  roleCode: string;
 }
 
 const initialState: IInitialAuthState = {
@@ -19,6 +20,7 @@ const initialState: IInitialAuthState = {
   loginSuccess: false,
   logoutSuccess: false,
   hasShownLoginMessage: false,
+  roleCode: "",
 };
 
 const { actions, reducer } = createSlice({
@@ -37,6 +39,7 @@ const { actions, reducer } = createSlice({
       state.loginSuccess = false;
       state.logoutSuccess = false;
       state.token = null;
+      state.roleCode = "";
       state.errorMessage = null;
     },
     resetEntity(state) {
@@ -59,6 +62,7 @@ const { actions, reducer } = createSlice({
       (state, { payload }: PayloadAction<ILoginOAuth2Response | any>) => {
         setDataCookie(KEYS_STORAGE.USER_TOKEN, payload.token);
         state.token = payload.token;
+        state.roleCode = payload.roleCode;
         state.loginSuccess = true;
         state.loading = false;
       }
