@@ -42,9 +42,7 @@ import {
 import { IAdvertisement, Status } from "@/model/advertisement.model";
 import dayjs from "dayjs";
 import { RootState } from "@/service/store/reducers";
-import {
-  createPayment,
-} from "@/service/store/vnpay/vnpay.api";
+import { createPayment } from "@/service/store/vnpay/vnpay.api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/service/config/axios-interceptor";
@@ -443,8 +441,8 @@ const AdManagement = () => {
           >
             <Select>
               <Option value="center">Center</Option>
-              <Option value="sidebar">Sidebar</Option>
-              <Option value="right">right</Option>
+              <Option value="left">Left</Option>
+              <Option value="right">Right</Option>
               <Option value="footer">Footer</Option>
             </Select>
           </Form.Item>
