@@ -1,7 +1,7 @@
 import { Item } from "@/model/news.model";
 import React from "react";
 import CustomImage from "../custom/CustomImage";
-import { DescriptionDateTime } from "@/shared/utils/ultils";
+import { decodeHtmlEntities, DescriptionDateTime } from "@/shared/utils/ultils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@/app/(provider)/ThemeProvider";
@@ -43,7 +43,10 @@ export default function CardLargeItem(props: CardLargeItem) {
                 <CustomImage src={data?.enclosure?.url || ""} rate={"16:9"} />
               </div>
             </div>
-            <div className={`py-[12px] ${page && "px-[14px]"}`}>
+            <div
+              className={`py-[12px] ${page && "px-[14px]"}`}
+              style={{ background: themeData.bgColor }}
+            >
               <p
                 className="font-bold text-ellipsis overflow-hidden hover:opacity-80 text-[22px] text-hover"
                 // style={
@@ -54,7 +57,7 @@ export default function CardLargeItem(props: CardLargeItem) {
                 // }
                 style={{ color: themeData.colorPrimary }}
               >
-                {data?.title || ""}
+                {decodeHtmlEntities(data?.title) || ""}
               </p>
               <div
                 className={
@@ -72,7 +75,7 @@ export default function CardLargeItem(props: CardLargeItem) {
                   "card-desc text-ellipsis overflow-hidden md:line-clamp-3 mt-2 font-quicksand-medium"
                 }
               >
-                {data?.contentSnippet || ""}
+                {decodeHtmlEntities(data?.contentSnippet) || ""}
               </span>
             </div>
           </div>

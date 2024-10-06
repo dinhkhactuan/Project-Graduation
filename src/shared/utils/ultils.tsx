@@ -211,3 +211,9 @@ export const processRSSData = (rssSources: any) => {
 export const getArticleSegment = (articles: any, start: any, end: any) => {
   return articles?.slice(start, end);
 };
+
+export const decodeHtmlEntities = (text: string) => {
+  const textArea = document.createElement("textarea");
+  textArea.innerHTML = text;
+  return textArea.value;
+};

@@ -44,3 +44,29 @@ svg {
     max-width: 1170px;
   }
 }
+
+.banner-container {
+  width: calc((100% - 1310px) / 2);
+  min-width: 160px;
+  height: 600px; /* Set a fixed height or use min-height for flexibility */
+}
+@media screen and (max-width: 1400.99px) {
+  .banner-container {
+    width: calc((100% - 1170px) / 2);
+  }
+}
+@media screen and (max-width: 1200.99px) {
+  .banner-container {
+    width: calc((100% - 960px) / 2);
+  }
+}
+@media screen and (max-width: 992.99px) {
+  .banner-container {
+    width: calc((100% - 720px) / 2);
+  }
+}
+@media screen and (max-width: 768.99px) {
+  .banner-container {
+    width: calc((100% - 540px) / 2);
+  }
+}

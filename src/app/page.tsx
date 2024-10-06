@@ -1,18 +1,11 @@
-import SlideHome from "@/shared/home/SlideHome";
-import HeaderHome from "@/shared/home/HeaderHome";
-import FooterHome from "@/shared/home/FooterHome";
-import ViewLayoutDefault from "@/shared/home/News/ViewLayout/ViewLayoutDefault";
+import Home from "./Home";
 
-export default function Home() {
+const Page = () => {
   return (
     <>
-      <SlideHome />
-      <div className="web-container">
-        <HeaderHome />
-        <ViewLayoutDefault />
-      </div>
-
-      <FooterHome />
+      <Home />
     </>
   );
-}
+};
+
+export default Page;

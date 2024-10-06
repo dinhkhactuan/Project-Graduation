@@ -7,4 +7,5 @@ export interface Theme {
   colorTextTitleCapability: string;
   colorBorderCapability: string;
   colorBgSlideCompany: string;
+  bgColor?: string;
 }

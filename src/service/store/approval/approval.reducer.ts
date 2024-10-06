@@ -4,7 +4,7 @@ import {
   EntityId,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { getApprovals } from "./approval.api";
+import { getApprovals, deleteApproval } from "./approval.api";
 import { RootState } from "../reducers";
 import { IResponse } from "@/shared/type/IResponse";
 import { IApproval } from "@/model/Approval.model";
@@ -13,7 +13,7 @@ interface IInitialAdvertisingFieldState {
   loading: boolean;
   AdvertisingField: IApproval | null;
   updateStatusUser: boolean;
-  deleteStatusUser: boolean;
+  deleteStatus: boolean;
   errorMessage: string | null;
 }
 
@@ -22,7 +22,7 @@ const initialState: IInitialAdvertisingFieldState = {
   errorMessage: null,
   updateStatusUser: false,
   AdvertisingField: null,
-  deleteStatusUser: false,
+  deleteStatus: false,
 };
 
 const ApprovalAdapter = createEntityAdapter({
@@ -40,13 +40,13 @@ const { actions, reducer } = createSlice({
     resetAll(state) {
       state.initialState.loading = false;
       state.initialState.updateStatusUser = false;
-      state.initialState.deleteStatusUser = false;
+      state.initialState.deleteStatus = false;
       state.initialState.AdvertisingField = null;
       state.initialState.errorMessage = null;
     },
     resetEntity(state) {
       state.initialState.updateStatusUser = false;
-      state.initialState.deleteStatusUser = false;
+      state.initialState.deleteStatus = false;
       state.initialState.loading = false;
       state.initialState.errorMessage = null;
     },
@@ -65,6 +65,23 @@ const { actions, reducer } = createSlice({
         state.initialState.errorMessage =
           payload?.message || payload?.error || payload?.msg;
         state.initialState.loading = false;
+      }
+    );
+
+    builder.addCase(
+      deleteApproval.fulfilled,
+      (state, { payload }: PayloadAction<any>) => {
+        state.initialState.deleteStatus = true;
+        state.initialState.loading = false;
+      }
+    );
+    builder.addCase(
+      deleteApproval.rejected,
+      (state, { payload }: PayloadAction<any>) => {
+        state.initialState.errorMessage =
+          payload?.message || payload?.error || payload?.msg;
+        state.initialState.loading = false;
+        state.initialState.deleteStatus = false;
       }
     );
   },

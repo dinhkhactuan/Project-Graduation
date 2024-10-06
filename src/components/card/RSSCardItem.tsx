@@ -1,6 +1,9 @@
 import React from "react";
 import CustomImage from "../custom/CustomImage";
-import { DescriptionTimeViewCount } from "@/shared/utils/ultils";
+import {
+  decodeHtmlEntities,
+  DescriptionTimeViewCount,
+} from "@/shared/utils/ultils";
 import { Item } from "@/model/news.model";
 import { FormCardItem } from "@/shared/home/News/ViewLayout/form";
 import { useTheme } from "@/app/(provider)/ThemeProvider";
@@ -67,12 +70,12 @@ const CardItem: React.FC<CardItemProps> = ({
             />
           </div>
         </div>
-        <div className="w-full">
+        <div className="w-full" style={{ background: themeData.bgColor }}>
           <div
             className="text-[16px] font-bold overflow-hidden md:line-clamp-2 text-hover"
             style={{ color: themeData?.colorPrimary }}
           >
-            {data?.title || ""}
+            {decodeHtmlEntities(data?.title) || ""}
           </div>
           {formCard !== FormCardItem.NO_DATE && (
             <div className="text-[14px] font-semibold flex items-center justify-between font-quicksand-semibold">
@@ -80,7 +83,7 @@ const CardItem: React.FC<CardItemProps> = ({
             </div>
           )}
           <span className="text-[14px] text-ellipsis overflow-hidden md:line-clamp-3 font-quicksand-medium">
-            {data?.contentSnippet || ""}
+            {decodeHtmlEntities(data?.contentSnippet) || ""}
           </span>
         </div>
       </div>

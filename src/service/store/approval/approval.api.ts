@@ -14,3 +14,15 @@ export const getApprovals = createAsyncThunk(
     }
   }
 );
+
+export const deleteApproval = createAsyncThunk(
+  `delete-approval-requests`,
+  async (id: number, thunkAPI) => {
+    try {
+      const { data } = await axiosInstance.get(`${prefix}/${id}`);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);

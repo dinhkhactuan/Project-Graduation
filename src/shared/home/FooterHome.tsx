@@ -4,12 +4,9 @@ import React, { useEffect } from "react";
 import { Layout } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { IAdvertisement, Status } from "@/model/advertisement.model";
-import {
-  getAdvertimentHome,
-} from "@/service/store/advertiment/advertiment.api";
+import { getAdvertimentHome } from "@/service/store/advertiment/advertiment.api";
 import Image from "next/image";
 import { RootState } from "@/service/store/reducers";
-
 const { Footer } = Layout;
 
 const FooterHome = () => {
@@ -42,7 +39,7 @@ const FooterHome = () => {
         </div>
       )}
       <Footer style={{ textAlign: "center" }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant DinhTuan
+        Design ©{new Date().getFullYear()} Created by DinhTuan
       </Footer>
     </Layout>
   );
