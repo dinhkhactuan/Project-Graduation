@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Button, Layout } from "antd";
+import { Layout } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { IAdvertisement, Status } from "@/model/advertisement.model";
 import { getAdvertimentHome } from "@/service/store/advertiment/advertiment.api";
 import Image from "next/image";
 import { RootState } from "@/service/store/reducers";
-import FacebookOutlined from "@ant-design/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const { Footer } = Layout;
 
 const FooterHome = () => {

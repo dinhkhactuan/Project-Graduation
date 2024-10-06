@@ -44,7 +44,6 @@ import dayjs from "dayjs";
 import { RootState } from "@/service/store/reducers";
 import {
   createPayment,
-  getStatusPayment,
 } from "@/service/store/vnpay/vnpay.api";
 import { toast } from "react-toastify";
 

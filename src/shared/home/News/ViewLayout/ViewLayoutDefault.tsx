@@ -1,15 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Banner from "../../Banner";
 import CenterNews from "../CenterNews";
 import LeftNews from "../LeftNews";
 import { FormCardItem } from "./form";
 import { LatestNews } from "@/service/store/news/news.api";
 import { getArticleSegment, processRSSData } from "@/shared/utils/ultils";
-import { useDispatch, useSelector } from "react-redux";
-import { IAdvertisement } from "@/model/advertisement.model";
-import { getAdvertimentHome } from "@/service/store/advertiment/advertiment.api";
-import { RootState } from "@/service/store/reducers";
 
 const ViewLayoutDefault = () => {
   const [processedNews, setProcessedNews] = useState([]);
