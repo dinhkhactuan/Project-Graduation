@@ -380,20 +380,28 @@ const AdManagement = () => {
   return (
     <div style={{ padding: "24px" }}>
       <Row gutter={16} style={{ marginBottom: "24px" }}>
-        <Col span={8}>
+        <Col span={6}>
           <Card>
             <Statistic title="Tổng số quảng cáo" value={ads.length} />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <Card>
             <Statistic
-              title="Trạng thái quảng cáo"
+              title="Quảng cáo chưa phê duyệt"
               value={ads.filter((ad) => ad.status === Status.PENDING).length}
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Quảng cáo đã phê duyệt"
+              value={ads.filter((ad) => ad.status === Status.APPROVED).length}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
           <Card>
             <Statistic
               title="Tổng giá quảng cáo"

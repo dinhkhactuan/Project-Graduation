@@ -2,6 +2,10 @@ import { Avatar } from "antd";
 import Title from "antd/es/typography/Title";
 import Image from "next/image";
 import avata from "@/assets/img/avata.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/service/store/reducers";
+import { useEffect } from "react";
+import { getUserInfo } from "@/service/store/user/user.api";
 
 interface IPropAvatarContainer {
   className?: string;
@@ -10,6 +14,11 @@ interface IPropAvatarContainer {
 }
 const AvatarContainer = (props: IPropAvatarContainer) => {
   const { className, textColor, collapsed } = props;
+  const { user } = useSelector((state: RootState) => state.user.initialState);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUserInfo() as any);
+  }, []);
 
   return (
     <div
@@ -34,7 +43,7 @@ const AvatarContainer = (props: IPropAvatarContainer) => {
           level={5}
           style={{ margin: 0, color: `${textColor ? textColor : "#000"}` }}
         >
-          Username
+          {user?.userName ?? "User"}
         </Title>
       )}
     </div>
