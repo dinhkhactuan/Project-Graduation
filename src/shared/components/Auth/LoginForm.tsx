@@ -25,9 +25,7 @@ const initialValues = {
 const LoginForm: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { token, roleCode, hasShownLoginMessage } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { token, roleCode } = useSelector((state: RootState) => state.auth);
 
   const onSubmit = (
     values: typeof initialValues,
@@ -38,13 +36,13 @@ const LoginForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (token && roleCode && hasShownLoginMessage) {
+    if (token && roleCode) {
       toast.success("Đăng nhập thành công");
       dispatch(setLoginMessageShown());
       if (roleCode === "admin") return router.push("/cms/dashboard");
       return router.push("/cms/adverManagement");
     }
-  }, [token, roleCode, hasShownLoginMessage]);
+  }, [token, roleCode]);
 
   return (
     <div

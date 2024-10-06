@@ -32,6 +32,9 @@ const { actions, reducer } = createSlice({
     },
     logout(state) {
       state.token = null;
+      state.loginSuccess = false;
+      state.hasShownLoginMessage = false;
+      state.roleCode = "";
       setDataCookie(KEYS_STORAGE.USER_TOKEN);
     },
     resetAll(state) {
