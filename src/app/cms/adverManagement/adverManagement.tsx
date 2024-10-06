@@ -46,6 +46,8 @@ import {
   createPayment,
 } from "@/service/store/vnpay/vnpay.api";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import axiosInstance from "@/service/config/axios-interceptor";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -62,6 +64,10 @@ const AdManagement = () => {
   const [requestAdver, setRequestAdver] = useState<number | null>(null);
   const [urlPayment, setUrlPayment] = useState<string>("");
   const dispatch = useDispatch();
+  const router = useRouter();
+  const [paymentStatus, setPaymentStatus] = useState<Record<number, string>>(
+    {}
+  );
 
   useEffect(() => {
     if (urlPayment) {
@@ -74,11 +80,33 @@ const AdManagement = () => {
     }
   }, [urlPayment]);
 
-  // useEffect(() => {
-  //   dispatch(getStatusPayment() as any).then((data: any) => {
-  //     console.log(data);
-  //   });
-  // }, []);
+  useEffect(() => {
+    const checkPaymentStatus = async () => {
+      const queryParams = new URLSearchParams(window.location.search);
+      const vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
+      const vnp_TxnRef = queryParams.get("vnp_TxnRef");
+
+      if (vnp_ResponseCode && vnp_TxnRef) {
+        try {
+          const response = await axiosInstance.get(`/vnpay/payment-callback`, {
+            params: queryParams,
+          });
+          if (response.data === "successful") {
+            setPaymentStatus((prev) => ({ ...prev, [vnp_TxnRef]: "success" }));
+            toast.success("Thanh toán thành công!");
+          } else {
+            setPaymentStatus((prev) => ({ ...prev, [vnp_TxnRef]: "failed" }));
+            toast.error("Thanh toán thất bại. Vui lòng thử lại.");
+          }
+        } catch (error) {
+          console.error("Error checking payment status:", error);
+          toast.error("Có lỗi xảy ra khi kiểm tra trạng thái thanh toán.");
+        }
+      }
+    };
+
+    checkPaymentStatus();
+  }, [router]);
   useEffect(() => {
     const fetchData = async () => {
       if (user?.roleEntity?.roleCode === "admin") {
@@ -236,7 +264,8 @@ const AdManagement = () => {
               </Popconfirm>
             )}
           {user?.roleEntity?.roleCode === "user" &&
-            record.status === Status.APPROVED && (
+            record.status === Status.APPROVED &&
+            paymentStatus[record.advertisementId] !== "failed" && (
               <Tooltip title="Thanh toán">
                 <Button
                   icon={<CreditCardOutlined />}
