@@ -79,7 +79,7 @@ const convertChart = (advertiments: IAdvertisement[]) => {
 };
 
 const convertData = (advertiments: IAdvertisement[]) => {
-  const data = advertiments.map((item, index) => {
+  const data = advertiments?.slice(0, 4)?.map((item, index) => {
     return {
       key: index,
       product: item.advertisementName,
@@ -173,7 +173,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col span={12}>
-          <Card title="Top sản phẩm bán chạy">
+          <Card title="Quảng cáo gần nhất">
             <Table
               dataSource={convertData(advertiments)}
               columns={columns}
